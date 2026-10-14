@@ -1,4 +1,4 @@
-# 塔羅斯 AI 助手 · SS14
+# Torchlight: Infinite SS14 — Tartarus Planner
 
 《火炬之光：無限》的副螢幕網頁工具。第一階段只驗證畫面分享與手動截圖，**沒有 AI、棋盤辨識或策略推薦**。React + TypeScript + Vite，純靜態網站，不需要後端。
 
@@ -34,21 +34,21 @@ pnpm preview
 
 本地 Repository 已初始化；遠端建立及正式網址必須由實際 GitHub 帳號決定，未預設已發布。
 
-1. 登入 GitHub，建立 **Public** Repository，例如 `talos-ai-assistant`。為避免合併衝突，不要先產生 README / .gitignore。
+1. 登入 GitHub，建立 **Public** Repository，例如 `torchlight-infinite-ss14-tartarus-planner`。為避免合併衝突，不要先產生 README / .gitignore。
 2. 本地完成提交後，連接遠端並推送（將帳號與 Repository 換成真實值）：
 
 ```sh
 git add .
 git commit -m "Implement phase-one screen capture assistant"
-git remote add origin https://github.com/YOUR_ACCOUNT/talos-ai-assistant.git
+git remote add origin https://github.com/YOUR_ACCOUNT/torchlight-infinite-ss14-tartarus-planner.git
 git push -u origin main
 ```
 
 3. Repository → Settings → Pages → Build and deployment → Source 選 **GitHub Actions**。確認 Actions 可執行且 `github-pages` environment 允許 main 部署。
 4. 若首次推送的部署因 Pages 尚未啟用而失敗，設定完後在 Actions 重新執行 workflow。
-5. 等待 `Validate and deploy Pages` 的 build 與 deploy 成功，從 deployment environment 開啟實際 URL。預設是 `https://YOUR_ACCOUNT.github.io/talos-ai-assistant/`。在 Settings → Pages 確認 HTTPS。
+5. 等待 `Validate and deploy Pages` 的 build 與 deploy 成功，從 deployment environment 開啟實際 URL。預設是 `https://YOUR_ACCOUNT.github.io/torchlight-infinite-ss14-tartarus-planner/`。在 Settings → Pages 確認 HTTPS。
 
-Workflow 在 main push 或手動觸發時安裝鎖定依賴、型別檢查、測試、建置，全部成功後才部署。PR 只做驗證，不部署。`VITE_BASE_PATH` 根據 repository 名稱設定子路徑；`*.github.io` repository 使用 `/`。自訂網域則需將建置 base 改為 `/`。本機測試子路徑可設 `VITE_BASE_PATH=/talos-ai-assistant/` 後建置，並以 `pnpm preview --base /talos-ai-assistant/` 開啟相同路徑。
+Workflow 在 main push 或手動觸發時安裝鎖定依賴、型別檢查、測試、建置，全部成功後才部署。PR 只做驗證，不部署。`VITE_BASE_PATH` 根據 repository 名稱設定子路徑；`*.github.io` repository 使用 `/`。自訂網域則需將建置 base 改為 `/`。本機測試子路徑可設 `VITE_BASE_PATH=/torchlight-infinite-ss14-tartarus-planner/` 後建置，並以 `pnpm preview --base /torchlight-infinite-ss14-tartarus-planner/` 開啟相同路徑。
 
 本站只有單一入口，沒有 history router 或不存在的子路由；在正式網站根路徑重新整理會繼續取得 index.html，不需 SPA 404 workaround。網址必須含正確 repository 路徑。
 

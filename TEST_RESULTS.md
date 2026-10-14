@@ -7,9 +7,9 @@
 | `pnpm install --frozen-lockfile` | 通過 |
 | `pnpm run typecheck` | 通過 |
 | `pnpm test` | 2 個測試檔、15 項測試全部通過 |
-| `VITE_BASE_PATH=/talos-ai-assistant/ pnpm run build` | 通過，輸出 dist |
-| 本機正式建置子路徑 | 瀏覽器載入 `/talos-ai-assistant/` 成功，JS / CSS 使用相同子路徑 |
-| 本機子路徑重新整理 | 成功，介面及按鈕狀態正確 |
+| `VITE_BASE_PATH=/torchlight-infinite-ss14-tartarus-planner/ pnpm run build` | 通過，輸出 dist |
+| 本機正式建置子路徑 | 初始版本瀏覽器載入 `/talos-ai-assistant/` 成功；更名後建置資產路徑已更新為 `/torchlight-infinite-ss14-tartarus-planner/` |
+| 本機子路徑重新整理 | 初始版本成功，介面及按鈕狀態正確；新名稱路徑待正式部署驗證 |
 | GitHub 遠端與 Pages | 未發布；建立 Repository 頁面導向 GitHub 登入畫面 |
 
 自動化涵蓋：未分享時禁止截圖、分享後未點擊不截圖、點擊擷取與更新、Blob URL 釋放、取消授權後重試、分享中斷後重新授權、重新分享釋放舊串流、手動停止、擷取錯誤、HTTPS / API 支援檢查、停止後才回傳的授權結果、未解碼/零解析度畫格、PNG 編碼失败、黑畫面提醒與常見授權錯誤訊息。

@@ -4,7 +4,7 @@ export default function App() {
   const { videoRef, supported, status, capturing, error, snapshot, start, stop, capture } = useScreenCapture();
   const sharing = status === 'sharing';
   return <div className="app">
-    <header><a className="brand" href="#"><span className="brand-mark">T</span><span>塔羅斯 <b>AI 助手</b><small>TORCHLIGHT: INFINITE · SS14</small></span></a><span className="phase">PHASE 01 <i/> 截圖功能驗證</span></header>
+    <header><a className="brand" href="#"><span className="brand-mark">T</span><span>Tartarus <b>Planner</b><small>TORCHLIGHT: INFINITE · SS14</small></span></a><span className="phase">PHASE 01 <i/> 截圖功能驗證</span></header>
     <main>
       <div className="intro"><p className="eyebrow">你的副螢幕，下一步的起點</p><h1>看清棋盤，<span>再做決定。</span></h1><p>分享遊戲視窗，手動擷取當前畫面。第一階段專注截圖，AI 分析尚未開放。</p></div>
       <div className="workspace">
@@ -25,7 +25,7 @@ export default function App() {
           <section className="tip"><h3>擷取小提醒</h3><p>遊戲最小化、全螢幕獨佔模式或受保護畫面可能造成黑畫面。建議先測試無邊框視窗模式，並保持遊戲視窗開啟。</p><p>授權由瀏覽器管理；停止分享或重新整理後，需要再次選擇來源。</p></section>
         </aside>
       </div>
-      <footer><span>塔羅斯 AI 助手 <b>·</b> SS14</span><span>本機處理 / 無後端 / 手動截圖</span></footer>
+      <footer><span>Tartarus Planner <b>·</b> SS14</span><span>本機處理 / 無後端 / 手動截圖</span></footer>
     </main>
   </div>;
 }

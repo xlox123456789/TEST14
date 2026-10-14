@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-export function SiteInfo() {
+export function SiteInfo({ onStartShare, shareDisabled, sharing }: { onStartShare: () => Promise<void>; shareDisabled: boolean; sharing: boolean }) {
   const tutorial = useRef<HTMLDialogElement>(null);
   const privacy = useRef<HTMLDialogElement>(null);
   function closeOnBackdrop(event: React.MouseEvent<HTMLDialogElement>) {
@@ -18,7 +18,7 @@ export function SiteInfo() {
         <p className="eyebrow">快速開始</p><h2>分享畫面與截圖</h2>
         <ol>
           <li><strong>開啟遊戲與網站</strong><p>使用 Chrome 或 Edge 開啟本站。可在主螢幕玩遊戲、副螢幕操作助手。</p></li>
-          <li><strong>分享遊戲視窗</strong><p>點「開始分享」，在瀏覽器選擇器切到「視窗」，選取 Torchlight: Infinite，再點「分享」。請確認選到的是遊戲視窗，避免分享其他私人內容。</p></li>
+          <li><strong>分享遊戲視窗</strong><p>點「開始分享」，在瀏覽器選擇器切到「視窗」，選取 Torchlight: Infinite，再點「分享」。</p><p className="notice"><strong>請確認只選取遊戲視窗，避免分享其他私人內容。</strong></p><button className="secondary" disabled={shareDisabled} onClick={() => { tutorial.current?.close(); void onStartShare(); }}>{sharing ? '重新分享畫面' : '開始分享畫面'}</button></li>
           <li><strong>擷取當前畫面</strong><p>狀態變成「分享中」後，點「分析棋盤」。目前只截圖，會顯示預覽、擷取時間與解析度，不會產生 AI 建議。再次點擊即可更新截圖。</p></li>
           <li><strong>停止或更換來源</strong><p>點「停止分享」結束串流；「重新分享」可更換視窗。停止分享或重新整理後，需要再次授權。</p></li>
         </ol>

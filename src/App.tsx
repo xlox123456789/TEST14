@@ -5,9 +5,8 @@ export default function App() {
   const { videoRef, supported, status, capturing, error, snapshot, start, stop, capture } = useScreenCapture();
   const sharing = status === 'sharing';
   return <div className="app">
-    <header><a className="brand" href="#"><span className="brand-mark">T</span><span>Tartarus <b>Planner</b><small>TORCHLIGHT: INFINITE · SS14</small></span></a><span className="phase">PHASE 01 <i/> 截圖功能驗證</span></header>
+    <header><a className="brand" href="#"><span className="brand-mark">T</span><span>Tartarus <b>Planner</b><small>TORCHLIGHT: INFINITE · SS14</small></span></a><div className="header-tools"><SiteInfo /><span className="phase">PHASE 01 <i/> 截圖功能驗證</span></div></header>
     <main>
-      <SiteInfo />
       <div className="intro"><p className="eyebrow">你的副螢幕，下一步的起點</p><h1>看清棋盤，<span>再做決定。</span></h1><p>分享遊戲視窗，手動擷取當前畫面。第一階段專注截圖，AI 分析尚未開放。</p></div>
       <div className="workspace">
         <section className="panel capture-panel"><div className="panel-heading"><h2><span className="step">01</span> 遊戲畫面</h2><span className={`status ${sharing ? 'active' : ''}`}><i/>{sharing ? '分享中' : status === 'requesting' ? '等待授權' : '尚未分享'}</span></div>

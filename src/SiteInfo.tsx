@@ -1,7 +1,19 @@
+import { useRef } from 'react';
+
 export function SiteInfo() {
+  const tutorial = useRef<HTMLDialogElement>(null);
+  const privacy = useRef<HTMLDialogElement>(null);
+  function closeOnBackdrop(event: React.MouseEvent<HTMLDialogElement>) {
+    if (event.target !== event.currentTarget) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) event.currentTarget.close();
+  }
   return <nav className="site-info" aria-label="網站資訊">
-    <details className="info-dropdown">
-      <summary>教學 <span>↘</span></summary>
+    <button className="info-trigger" onClick={() => tutorial.current?.showModal()}>教學</button>
+    <button className="info-trigger" onClick={() => privacy.current?.showModal()}>免責聲明與隱私權</button>
+    <a className="kofi-link" href="https://ko-fi.com/louissu" target="_blank" rel="noopener noreferrer">☕ Ko-fi <span>支持開發 ↗</span></a>
+    <dialog ref={tutorial} className="info-modal" aria-labelledby="tutorial-title" onClick={closeOnBackdrop}>
+      <div className="modal-heading"><h2 id="tutorial-title">教學</h2><button onClick={() => tutorial.current?.close()} aria-label="關閉教學">×</button></div>
       <div className="info-content">
         <p className="eyebrow">快速開始</p><h2>分享畫面與截圖</h2>
         <ol>
@@ -12,9 +24,9 @@ export function SiteInfo() {
         </ol>
         <p className="notice">如果截圖全黑或未更新，請讓遊戲保持開啟、避免最小化，嘗試無邊框視窗模式後重新分享。</p>
       </div>
-    </details>
-    <details className="info-dropdown">
-      <summary>免責聲明與隱私權 <span>↘</span></summary>
+    </dialog>
+    <dialog ref={privacy} className="info-modal" aria-labelledby="privacy-title" onClick={closeOnBackdrop}>
+      <div className="modal-heading"><h2 id="privacy-title">免責聲明與隱私權</h2><button onClick={() => privacy.current?.close()} aria-label="關閉免責聲明與隱私權">×</button></div>
       <div className="info-content">
         <p className="eyebrow">更新日期：2026-10-14</p><h2>免責聲明</h2>
         <p>本站是玩家製作的非官方工具，與《火炬之光：無限》的開發商、發行商或營運團隊沒有隸屬關係。遊戲名稱與相關商標屬其各自權利人。</p>
@@ -29,7 +41,6 @@ export function SiteInfo() {
         <h3>廣告與資料用途</h3><p>本站目前沒有 AdSense 或其他廣告，不販售、交換或出租截圖資料，不建立使用者輪廓，也不發送郵件。</p>
         <h3>政策異動與聯絡</h3><p>政策更新會直接公布於本頁。使用問題或隱私疑問，請至 <a href="https://github.com/xlox123456789/TEST14/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a> 提出；Issues 是公開的，請勿附上私人資料或敏感截圖。</p>
       </div>
-    </details>
-    <a className="kofi-link" href="https://ko-fi.com/louissu" target="_blank" rel="noopener noreferrer">☕ Ko-fi <span>支持開發 ↗</span></a>
+    </dialog>
   </nav>;
 }

@@ -27,7 +27,7 @@ export function SiteInfo() {
         <h3>網站託管與外部服務</h3><p>本站由 GitHub Pages 託管。開啟網站仍會向託管服務請求網頁與靜態檔案，服務供應商可能依自己的政策處理連線資料。詳見 <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub 隱私權聲明</a>。</p>
         <p>Ko-fi 是外部贊助平台。只有點擊連結才會前往，本站沒有嵌入 Ko-fi 追蹤元件；在 Ko-fi 的付款、Cookie 與資料處理由該平台負責。</p>
         <h3>廣告與資料用途</h3><p>本站目前沒有 AdSense 或其他廣告，不販售、交換或出租截圖資料，不建立使用者輪廓，也不發送郵件。</p>
-        <h3>政策異動與聯絡</h3><p>政策更新會直接公布於本頁。使用問題或隱私疑問，請至 <a href="https://github.com/xlox123456789/torchlight-infinite-ss14-tartarus-planner/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a> 提出；Issues 是公開的，請勿附上私人資料或敏感截圖。</p>
+        <h3>政策異動與聯絡</h3><p>政策更新會直接公布於本頁。使用問題或隱私疑問，請至 <a href="https://github.com/xlox123456789/TEST14/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a> 提出；Issues 是公開的，請勿附上私人資料或敏感截圖。</p>
       </div>
     </details>
     <a className="kofi-link" href="https://ko-fi.com/louissu" target="_blank" rel="noopener noreferrer">☕ Ko-fi <span>支持開發 ↗</span></a>

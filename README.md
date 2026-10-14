@@ -34,25 +34,25 @@ pnpm preview
 
 ## GitHub 與 Pages 部署
 
-已建立公開 [GitHub Repository](https://github.com/xlox123456789/torchlight-infinite-ss14-tartarus-planner)，並發布至 [GitHub Pages 正式網站](https://xlox123456789.github.io/torchlight-infinite-ss14-tartarus-planner/)。Pages 使用 GitHub Actions 部署，HTTPS 已啟用，正式入口載入與重新整理已驗證。後續更新提交並推送至 main 即自動驗證與部署。
+已建立公開 [GitHub Repository](https://github.com/xlox123456789/TEST14)，並發布至 [GitHub Pages 正式網站](https://xlox123456789.github.io/TEST14/)。Pages 使用 GitHub Actions 部署，HTTPS 已啟用，正式入口載入與重新整理已驗證。後續更新提交並推送至 main 即自動驗證與部署。
 
 以下為其他帳號重建部署的步驟：
 
-1. 登入 GitHub，建立 **Public** Repository，例如 `torchlight-infinite-ss14-tartarus-planner`。為避免合併衝突，不要先產生 README / .gitignore。
+1. 登入 GitHub，建立 **Public** Repository，例如 `TEST14`。為避免合併衝突，不要先產生 README / .gitignore。
 2. 本地完成提交後，連接遠端並推送（將帳號與 Repository 換成真實值）：
 
 ```sh
 git add .
 git commit -m "Implement phase-one screen capture assistant"
-git remote add origin https://github.com/YOUR_ACCOUNT/torchlight-infinite-ss14-tartarus-planner.git
+git remote add origin https://github.com/YOUR_ACCOUNT/TEST14.git
 git push -u origin main
 ```
 
 3. Repository → Settings → Pages → Build and deployment → Source 選 **GitHub Actions**。確認 Actions 可執行且 `github-pages` environment 允許 main 部署。
 4. 若首次推送的部署因 Pages 尚未啟用而失敗，設定完後在 Actions 重新執行 workflow。
-5. 等待 `Validate and deploy Pages` 的 build 與 deploy 成功，從 deployment environment 開啟實際 URL。預設是 `https://YOUR_ACCOUNT.github.io/torchlight-infinite-ss14-tartarus-planner/`。在 Settings → Pages 確認 HTTPS。
+5. 等待 `Validate and deploy Pages` 的 build 與 deploy 成功，從 deployment environment 開啟實際 URL。預設是 `https://YOUR_ACCOUNT.github.io/TEST14/`。在 Settings → Pages 確認 HTTPS。
 
-Workflow 在 main push 或手動觸發時安裝鎖定依賴、型別檢查、測試、建置，全部成功後才部署。PR 只做驗證，不部署。`VITE_BASE_PATH` 根據 repository 名稱設定子路徑；`*.github.io` repository 使用 `/`。自訂網域則需將建置 base 改為 `/`。本機測試子路徑可設 `VITE_BASE_PATH=/torchlight-infinite-ss14-tartarus-planner/` 後建置，並以 `pnpm preview --base /torchlight-infinite-ss14-tartarus-planner/` 開啟相同路徑。
+Workflow 在 main push 或手動觸發時安裝鎖定依賴、型別檢查、測試、建置，全部成功後才部署。PR 只做驗證，不部署。`VITE_BASE_PATH` 根據 repository 名稱設定子路徑；`*.github.io` repository 使用 `/`。自訂網域則需將建置 base 改為 `/`。本機測試子路徑可設 `VITE_BASE_PATH=/TEST14/` 後建置，並以 `pnpm preview --base /TEST14/` 開啟相同路徑。
 
 本站只有單一入口，沒有 history router 或不存在的子路由；在正式網站根路徑重新整理會繼續取得 index.html，不需 SPA 404 workaround。網址必須含正確 repository 路徑。
 

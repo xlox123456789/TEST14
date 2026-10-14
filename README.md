@@ -32,7 +32,9 @@ pnpm preview
 
 ## GitHub 與 Pages 部署
 
-本地 Repository 已初始化；遠端建立及正式網址必須由實際 GitHub 帳號決定，未預設已發布。
+已建立公開 [GitHub Repository](https://github.com/xlox123456789/torchlight-infinite-ss14-tartarus-planner)，並發布至 [GitHub Pages 正式網站](https://xlox123456789.github.io/torchlight-infinite-ss14-tartarus-planner/)。Pages 使用 GitHub Actions 部署，HTTPS 已啟用，正式入口載入與重新整理已驗證。後續更新提交並推送至 main 即自動驗證與部署。
+
+以下為其他帳號重建部署的步驟：
 
 1. 登入 GitHub，建立 **Public** Repository，例如 `torchlight-infinite-ss14-tartarus-planner`。為避免合併衝突，不要先產生 README / .gitignore。
 2. 本地完成提交後，連接遠端並推送（將帳號與 Repository 換成真實值）：

@@ -61,3 +61,13 @@ Repository：https://github.com/xlox123456789/torchlight-infinite-ss14-tartarus-
 - 本機瀏覽器實際匯入MP4／WebM、選0.5與1.5秒並手動擷取；WebM外圈16位置符合獨立預期JSON，已知欄位50/50。MP4校準失敗保持未知，未隱藏失敗案例。純像素三尺寸75/75是同一色碼協定測試，不是遊戲準確率。
 - 實際保存2張標註、1筆前後操作，匯出並重新匯入JSON，重跑資料集回歸；瀏覽器產物public/fixtures/browser-webm-dataset.json可重現，僅含原創素材。0段真實遊戲影片，實戰辨識率未知。
 - GA4真實資源559072703、G-XD85CB7TMV已建立，Webstream16132135406；加強型評估關閉，使用者同意後建立有效的開發流量排除篩選器。正式站事件與部署驗證會補登實際結果。
+
+### 正式發布後補驗證
+
+- Commit [87646bb](https://github.com/xlox123456789/TEST14/commit/87646bbd93d75f2b7acc3e89f27fca555e9b2d79) 的 [Actions #11](https://github.com/xlox123456789/TEST14/actions/runs/38692751585) build33秒／deploy10秒成功；正式HTTPS頁面顯示2026.10.15.4。
+- GA4 DebugView實際收到page_view、video_imported、board_analysis_requested、board_recognition_completed、video_frame_analyzed、manual_correction_saved、error_report_submitted、board_recognition_failed，共8種網站事件；即時總覽顯示1瀏覽、1活躍使用者及對應事件。Google額外自動事件first_visit／session_start亦可見。
+- 正式WebM手動影格0.5秒成功辨識；第二格獅人工修正為鼠後完成修正；原創測試回報收據b87383fd-35be-47f0-9a13-4dcd901474ea。2.5秒黑畫面辨識全未知，發送failed結果，無虛構成功。
+- 實際同意前Google script數0；撤回後0，後續操作不追加追蹤；同頁重新同意未新增page_view。結束恢復拒絕及無debug參數正式網址。
+- GA4開發流量篩選「有效」已確認，但官方說明可能需24–36小時生效，本次即時報表仍顯示QA；一般報表最終排除尚未驗證。
+- 標註PNG下載已通過，原先data URL下載等待未完成，改為Blob URL後成功下載並檢查畫面。
+- 本次未重新在正式站擷取實際遊戲視窗，因此capture_started／capture_completed／capture_failed只有程式接線與自動化回歸，未確認本次GA4後台收件。正式開服樣本、多解析度實戰、刑具／連鎖／升階機率、收益與最佳策略仍未知。

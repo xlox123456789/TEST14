@@ -9,7 +9,7 @@
 - 真實 Measurement ID：`G-XD85CB7TMV`，已存 GitHub Actions variable `VITE_GA_MEASUREMENT_ID`。
 - [資源管理頁](https://analytics.google.com/analytics/web/#/a403351982p559072703/admin)
 - 關閉 Enhanced Measurement，避免自動檔名、外連或影片事件。未建立 Firebase 或 Google Cloud 專案。
-- TEST14 Developer Traffic 篩選器為「排除／有效」；使用者已明確同意永久排除未來 debug_mode 測試資料。DebugView 可查看開發事件；一般報表不計入此類測試流量。預設 Internal Traffic 仍為測試狀態，未任意設定 IP。
+- TEST14 Developer Traffic 篩選器為「排除／有效」；使用者已明確同意永久排除未來 debug_mode 測試資料。DebugView 可查看開發事件；設計用途是避免此類測試流量進入一般報表；Google 說明篩選器可能需24–36小時生效，尚未驗證延遲後的排除結果。本次即時報表仍可見QA事件，不能宣稱已立即完全排除。預設 Internal Traffic 仍為測試狀態，未任意設定 IP。
 
 ## 同意與資料範圍
 
@@ -44,3 +44,13 @@ strategy_requested 尚未啟用；資料集回歸不偽造手動操作事件。�
 analytics.test.ts 驗證未同意、拒絕、撤回、重複瀏覽、敏感參數過濾、環境排除。正式站事件送達結果另見 TEST_RESULTS.md；網站 debug 面板僅表示事件進入 gtag 佇列，不能單獨證明 GA4 收到。
 
 官方參考：[手動 page_view](https://developers.google.com/analytics/devguides/collection/ga4/views)、[隱私控制](https://developers.google.com/tag-platform/security/guides/privacy)、[開發流量篩選](https://support.google.com/analytics/answer/13296662)。
+
+## 2026-10-15 正式站驗證
+
+部署87646bb，Actions #11 build／deploy成功。實際點擊、解碼、辨識、人工修改與原創圖片回報後，在GA4 DebugView確認8種事件：page_view、video_imported、board_analysis_requested、board_recognition_completed、video_frame_analyzed、manual_correction_saved、error_report_submitted、board_recognition_failed。
+
+即時總覽確認Tartarus Planner瀏覽1次、1活躍使用者；事件表實際顯示兩次分析與影格分析，成功／失敗辨識各1，回報成功1。這是明確開啟debug模式的QA操作，不是玩家流量統計；尚不能證明一般報表的最終排除。Google官方說明篩選器可需24–36小時才套用。
+
+同意前實際DOM中無Google script，同意後載入；撤回後script移除、後續載入測試圖不新增事件；同頁重新同意page_view仍僅1次。測試結束已恢復拒絕狀態及無偵錯參數正式網址。
+
+capture_started／capture_completed／capture_failed 已接線且原擷取回歸測試通過，但本次未在正式站重新授權實際遊戲視窗並確認這3種事件送達；不列入上述後台實證。strategy_requested未實作、不發送。

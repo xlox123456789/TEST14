@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { reportEndpoint, sendReport, type ReportContext } from './feedback';
+import { track } from '../analytics/analytics';
 
 export function FeedbackDialog({ context, onClose }: { context: ReportContext; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -15,7 +16,7 @@ export function FeedbackDialog({ context, onClose }: { context: ReportContext; o
     const controller = new AbortController(); request.current = controller;
     const timeout = window.setTimeout(() => controller.abort(), 30_000);
     setStatus('sending'); setError('');
-    try { const id = await sendReport(context, endpoint, controller.signal); setReceipt(id); setStatus('sent'); }
+    try { const id = await sendReport(context, endpoint, controller.signal); setReceipt(id); setStatus('sent'); track('error_report_submitted', { operation_result: 'success' }); }
     catch (e) { if (dialog.current?.open) { setStatus('idle'); setError(controller.signal.aborted ? '傳送逾時或已取消；無法確認接收狀態，請稍後查詢再重試。' : e instanceof Error ? e.message : '傳送失敗'); } }
     finally { window.clearTimeout(timeout); }
   }

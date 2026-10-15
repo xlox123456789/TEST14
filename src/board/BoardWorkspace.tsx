@@ -8,6 +8,9 @@ import { exportBoardJSON, parseBoardJSON } from './json';
 import { possibleActions, type RuleMode } from './rules';
 import { FeedbackDialog } from './FeedbackDialog';
 import type { ReportContext } from './feedback';
+import { VideoLab } from '../video/VideoLab';
+import { boardDiff, type LabeledFrame } from '../video/history';
+import { track } from '../analytics/analytics';
 
 const FULL: Rect = { x: 0, y: 0, width: 1, height: 1 };
 export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
@@ -15,6 +18,8 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
   const [editing, setEditing] = useState(false);
   const [recognized, setRecognized] = useState<Board | null>(null);
   const [report, setReport] = useState<ReportContext | null>(null);
+  const [videoFrame, setVideoFrame] = useState<{ url: string; timeSeconds: number; profile: 'game' | 'synthetic' } | null>(null);
+  const editBefore = useRef<Board | null>(null);
   const [image, setImage] = useState<{ url: string; profile: 'game' | 'synthetic'; label: string } | null>(null);
   const [region, setRegion] = useState<Rect | null>(null);
   const [message, setMessage] = useState('可直接手動建立盤面，或載入自製測試圖片。真實遊戲模板尚不足。');
@@ -24,22 +29,28 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
   const ownedURL = useRef<string | null>(null); const seenSnapshot = useRef<Snapshot | null>(null);
   const selectionStart = useRef<{ x: number; y: number } | null>(null);
   function updateBoard(value: Board) { setBoard(value); }
-  async function run(url: string, profile: 'game' | 'synthetic', crop: Rect | null) {
+  async function run(url: string, profile: 'game' | 'synthetic', crop: Rect | null, analysisMode: 'video' | 'screenshot' = videoFrame ? 'video' : 'screenshot') {
     controller.current?.abort(); const request = new AbortController(); controller.current = request;
     setBusy(true); setError(''); setEditing(false); setReport(null); setRecognized(null);
+    const started = performance.now();
     try {
       const result = await analyzeImage(url, profile, crop, request.signal);
       if (request.signal.aborted) return;
       setBoard(result.board); setRecognized(result.board); setRegion(result.region); setMessage(result.message);
-    } catch (e) { if (!request.signal.aborted) { setBoard(createBoard()); setMessage('辨識失敗，盤面已保留為未知，可手動編輯。'); setError(e instanceof Error ? e.message : '無法辨識圖片'); } }
+      const success = result.board.cells.some(c => c.state !== 'unknown');
+      const params = { analysis_mode: analysisMode, operation_result: success ? 'success' as const : 'failed' as const, processing_time_ms: performance.now() - started };
+      track(success ? 'board_recognition_completed' : 'board_recognition_failed', params);
+      if (analysisMode === 'video') track('video_frame_analyzed', params);
+    } catch (e) { if (!request.signal.aborted) { setBoard(createBoard()); setMessage('辨識失敗，盤面已保留為未知，可手動編輯。'); setError(e instanceof Error ? e.message : '無法辨識圖片'); track('board_recognition_failed', { analysis_mode: analysisMode, operation_result: 'failed' }); if (analysisMode === 'video') track('video_frame_analyzed', { analysis_mode: 'video', operation_result: 'failed' }); } }
     finally { if (!request.signal.aborted) setBusy(false); }
   }
-  function replaceImage(url: string, profile: 'game' | 'synthetic', label: string, owned = false) {
+  function replaceImage(url: string, profile: 'game' | 'synthetic', label: string, owned = false, timeSeconds?: number) {
     controller.current?.abort(); setBusy(false);
     if (ownedURL.current) URL.revokeObjectURL(ownedURL.current);
     ownedURL.current = owned ? url : null;
     setImage({ url, profile, label }); setRegion(null); setBoard(createBoard()); setError('');
-    void run(url, profile, null);
+    setVideoFrame(timeSeconds === undefined ? null : { url, timeSeconds, profile });
+    void run(url, profile, null, timeSeconds === undefined ? 'screenshot' : 'video');
   }
   // This responds to an explicit single-frame capture, never polls the stream.
   useEffect(() => { if (snapshot && snapshot !== seenSnapshot.current) { seenSnapshot.current = snapshot; replaceImage(snapshot.url, 'game', '最近一次手動截圖'); } }, [snapshot]);
@@ -50,7 +61,7 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
     replaceImage(URL.createObjectURL(file), 'game', file.name.slice(0, 100), true);
   }
   function importJSON(text: string) {
-    try { const next = parseBoardJSON(text); controller.current?.abort(); setBusy(false); setBoard(next); setRecognized(null); setImage(null); setRegion(null); setReport(null); setEditing(false); setError(''); setMessage('已匯入盤面；來源為檔案自述，請人工核對後確認。'); }
+    try { const next = parseBoardJSON(text); controller.current?.abort(); setBusy(false); setBoard(next); setRecognized(null); setImage(null); setVideoFrame(null); setRegion(null); setReport(null); setEditing(false); setError(''); setMessage('已匯入盤面；來源為檔案自述，請人工核對後確認。'); }
     catch (e) { setError(e instanceof Error ? e.message : 'JSON 格式錯誤'); }
   }
   function readJSON(file: File | undefined) {
@@ -65,12 +76,19 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
   }
   function point(event: React.PointerEvent<HTMLDivElement>) { const box = event.currentTarget.getBoundingClientRect(); return { x: Math.max(0, Math.min(1, (event.clientX - box.left) / box.width)), y: Math.max(0, Math.min(1, (event.clientY - box.top) / box.height)) }; }
   const actions = possibleActions(board, mode);
+  function loadLabeled(frame: LabeledFrame) {
+    controller.current?.abort(); setBusy(false); setReport(null); setEditing(false);
+    if (ownedURL.current) URL.revokeObjectURL(ownedURL.current); ownedURL.current = null;
+    setImage({ url: frame.imagePng, profile: frame.profile, label: '已載入的標註影格（人工資料）' }); setVideoFrame({ url: frame.imagePng, timeSeconds: frame.timeSeconds, profile: frame.profile });
+    setBoard(frame.board); setRecognized(frame.recognizedBoard); setRegion(frame.region); setMessage('已載入標註資料；請核對，匯入標註不代表辨識成功。');
+  }
   return <>
     <section className="panel recognition-panel" aria-labelledby="recognition-heading">
       <div className="panel-heading"><h2 id="recognition-heading"><span className="step">02</span> 盤面辨識與修正</h2><span className="soon">前瞻布局</span></div>
-      <div className="board-actions"><button className="secondary" disabled={busy} aria-pressed={editing} onClick={() => setEditing(!editing)}>{editing ? '完成修正' : '修正盤面'}</button>
+      <div className="board-actions"><button className="secondary" disabled={busy} aria-pressed={editing} onClick={() => { if (!editing) editBefore.current = board; else if (editBefore.current) { const diff = boardDiff(editBefore.current, board); if (diff.cells.length || diff.globals.length) track('manual_correction_saved', { operation_result: 'success', analysis_mode: videoFrame ? 'video' : 'screenshot', correction_count: diff.cells.length }); } setEditing(!editing); }}>{editing ? '完成修正' : '修正盤面'}</button>
         <button className="secondary" disabled={busy || !image} onClick={() => { if (image) setReport({ image, recognized, board, region }); }}>回報辨識錯誤</button></div>
       {!image && <p className="muted">回報需要先截圖或載入圖片；可直接進入修正模式建立盤面。</p>}
+      <VideoLab board={board} recognized={recognized} region={region} current={videoFrame} busy={busy} onFrame={(frame, time, profile) => replaceImage(frame.url, profile, '本機影片手動影格', true, time)} onLoad={loadLabeled} onSourceChange={() => { controller.current?.abort(); setBusy(false); setImage(null); setVideoFrame(null); setRecognized(null); setBoard(createBoard()); setReport(null); }} />
       <div className="board-actions"><button className="secondary" disabled={busy} onClick={() => { try { replaceImage(testImageURL(), 'synthetic', '自製色碼測試圖（非遊戲畫面）'); } catch (e) { setError(String(e)); } }}>載入測試圖片</button>
         <label className="file-button">載入本機圖片<input type="file" aria-label="載入本機圖片" accept="image/png,image/jpeg,image/webp" disabled={busy} onChange={e => { loadImage(e.target.files?.[0]); e.target.value = ''; }} /></label></div>
       <p className="notice" role="status">{busy ? '正在本機解碼與辨識…' : message}</p>

@@ -1,0 +1,25 @@
+{
+  "license": "CC0-1.0",
+  "original": true,
+  "gameFootage": false,
+  "durationSeconds": 3,
+  "fps": 30,
+  "cases": [
+    {
+      "timeSeconds": 0.5,
+      "image": "frame-0.png",
+      "expected": "expected-before.json"
+    },
+    {
+      "timeSeconds": 1.5,
+      "image": "frame-1.png",
+      "expected": "expected-after.json"
+    },
+    {
+      "timeSeconds": 2.5,
+      "image": "frame-2.png",
+      "expected": null,
+      "abstain": true
+    }
+  ]
+}

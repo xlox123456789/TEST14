@@ -2,6 +2,7 @@ import { useScreenCapture } from './capture/useScreenCapture';
 import { SiteInfo } from './SiteInfo';
 import { BoardWorkspace } from './board/BoardWorkspace';
 import './board/board.css';
+import { ConsentControls } from './analytics/ConsentControls';
 
 export default function App() {
   const { videoRef, supported, status, capturing, error, snapshot, start, stop, capture } = useScreenCapture();
@@ -9,6 +10,7 @@ export default function App() {
   return <div className="app">
     <header><a className="brand" href="#"><span className="brand-mark">T</span><span>Tartarus <b>Planner</b><small>TORCHLIGHT: INFINITE · SS14</small></span></a><div className="header-tools"><SiteInfo onStartShare={start} shareDisabled={!supported || status === 'requesting'} sharing={sharing} /><span className="phase">PHASE 02 <i/> 盤面辨識與修正</span></div></header>
     <main>
+      <ConsentControls />
       <div className="workspace">
         <section className="panel capture-panel"><div className="panel-heading"><h2><span className="step">01</span> 遊戲畫面</h2><span className={`status ${sharing ? 'active' : ''}`}><i/>{sharing ? '分享中' : status === 'requesting' ? '等待授權' : '尚未分享'}</span></div>
           <div className="instructions"><span>↗</span><div><strong>主螢幕玩遊戲，副螢幕開啟助手</strong><p>按「開始分享」，在瀏覽器視窗選擇器中選取火炬遊戲視窗。分享期間可重複截圖。</p></div></div>

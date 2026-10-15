@@ -4,14 +4,14 @@
 
 ## 功能與使用
 
-頂部提供版本紀錄、分享／截圖教學、免責聲明與隱私權政策，以及 [Ko-fi 支持開發](https://ko-fi.com/louissu)。目前未啟用 GA4 或 AdSense；一般擷取與辨識不外傳圖片，只有使用者主動同意並確認回報才傳送該次資料。
+頂部提供版本紀錄、分享／截圖教學、免責聲明與隱私權政策，以及 [Ko-fi 支持開發](https://ko-fi.com/louissu)。GA4 僅在使用者同意後啟用，未使用 AdSense；一般擷取與辨識不外傳圖片，只有使用者主動同意並確認回報才傳送該次資料。
 
 1. 用 Chrome / Edge 開啟 HTTPS 網站（開發時 localhost 亦可）。
 2. 主螢幕開啟遊戲、副螢幕開啟網站，按「開始分享」，由瀏覽器選取遊戲視窗。網站無法自動指定或保證來源就是火炬。
 3. 授權後持續保留影像串流；按「分析棋盤」才將當前畫格轉成 PNG，顯示預覽、時間與解析度，並對該張圖片嘗試本機辨識。沒有可靠遊戲模板時保持未知，截圖預覽仍可使用。
 4. 重複點擊更新截圖；「停止分享」釋放串流，「重新分享」停止舊來源後重新授權。浏览器停止分享也會顯示提醒。
 
-沒有定時截圖或持續分析。隱藏 video 只接收分享串流；canvas 僅在點擊時建立。截圖使用 Blob URL 留在瀏覽器記憶體，不儲存至 localStorage；更新及離開頁面會釋放 URL，重新整理會清除截圖與分享授權。沒有遙測或外部字型；一般操作沒有外部 API 請求，自願錯誤回報才會 POST 至已設定的接收端。網站本身的靜態檔案仍會從 GitHub Pages 下載。
+沒有定時截圖或持續分析。隱藏 video 只接收分享串流；canvas 僅在點擊時建立。截圖使用 Blob URL 留在瀏覽器記憶體，不儲存至 localStorage；更新及離開頁面會釋放 URL，重新整理會清除截圖與分享授權。沒有外部字型；同意 GA4 後才載入 Google 分析程式與必要操作統計，自願錯誤回報才會 POST 圖片與盤面至已設定的接收端。網站本身的靜態檔案仍會從 GitHub Pages 下載。
 
 ## 2026.10.15.2 更新
 
@@ -123,3 +123,11 @@ Workflow 在 main push 或手動觸發時安裝鎖定依賴、型別檢查、測
 這些結果受 GPU、作業系統與遊戲呈現模式影響，mock 測試無法代替實機結果。
 
 技術依據：[MDN Screen Capture API](https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API)、[getDisplayMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia)、[GitHub Pages 自訂 workflow](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)。
+
+## 2026.10.15.4 影片測試與 GA4
+
+- GA4真實資源、同意／拒絕與撤回、事件白名單、本機／測試環境排除；詳見 [ANALYTICS.md](docs/ANALYTICS.md)。Measurement ID由GitHub建置變數提供。
+- 本機MP4／WebM回放、暫停、時間軸、指定秒數與FPS步進、手動擷取。修正確認後儲存標註與操作前後盤面，匯出標註PNG／JSON、重跑辨識並列出錯誤。
+- 詳細流程與資料結構：[VIDEO_TESTING.md](docs/VIDEO_TESTING.md)。影片資料集JSON包含圖片，與原本只含盤面的JSON不同；不會自動上傳。
+- 原創CC0三秒素材位於public/fixtures。0段正式遊戲影片，真實遊戲準確率仍未知。MP4壓縮校準失敗為已記錄案例，WebM測試盤面成功不代表遊戲模板完成。
+- 新增src/analytics、src/video、影片回歸／操作／GA4測試；修改BoardWorkspace、capture hook事件接點、FeedbackDialog成功事件、SiteInfo隱私政策、releases、Pages workflow與.env.example。原有手動截圖串流生命週期保留。

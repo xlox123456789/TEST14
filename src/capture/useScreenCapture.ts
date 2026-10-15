@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { captureFrame, shareError, type Snapshot } from './frame';
+import { track as trackAnalytics } from '../analytics/analytics';
 
 export function useScreenCapture() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -41,7 +42,7 @@ export function useScreenCapture() {
       if (!video) throw new Error('影像元件尚未就緒，請重試。');
       video.srcObject = stream;
       await video.play();
-      if (token === generation.current) setStatus('sharing');
+      if (token === generation.current) { setStatus('sharing'); trackAnalytics('capture_started', { operation_result: 'success', analysis_mode: 'screenshot' }); }
     } catch (cause) {
       if (token === generation.current) { release(); setStatus('idle'); setError(shareError(cause)); }
     } finally { busy.current = false; }
@@ -50,14 +51,16 @@ export function useScreenCapture() {
   async function capture() {
     if (captureBusy.current || status !== 'sharing' || !videoRef.current) return;
     captureBusy.current = true; setCapturing(true); setError('');
+    trackAnalytics('board_analysis_requested', { analysis_mode: 'screenshot' });
     const token = generation.current;
     try {
       const result = await captureFrame(videoRef.current);
       if (token !== generation.current) { URL.revokeObjectURL(result.url); return; }
       if (urlRef.current) URL.revokeObjectURL(urlRef.current);
       urlRef.current = result.url; setSnapshot(result);
+      trackAnalytics('capture_completed', { operation_result: 'success', analysis_mode: 'screenshot' });
     } catch (cause) {
-      if (token === generation.current) setError(cause instanceof Error ? cause.message : '無法取得影像，請重新分享。');
+      if (token === generation.current) { setError(cause instanceof Error ? cause.message : '無法取得影像，請重新分享。'); trackAnalytics('capture_failed', { operation_result: 'failed', analysis_mode: 'screenshot' }); }
     } finally { captureBusy.current = false; setCapturing(false); }
   }
   useEffect(() => () => {

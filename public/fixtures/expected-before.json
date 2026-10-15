@@ -1,0 +1,532 @@
+{
+  "schemaVersion": 1,
+  "layout": "preview-ring-6x4-v1",
+  "cells": [
+    {
+      "id": 1,
+      "row": 0,
+      "column": 0,
+      "state": "empty",
+      "species": null,
+      "rarity": null,
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "rarity": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 2,
+      "row": 0,
+      "column": 1,
+      "state": "prisoner",
+      "species": "lion",
+      "rarity": "magic",
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "rarity": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 3,
+      "row": 0,
+      "column": 2,
+      "state": "prisoner",
+      "species": "wolf",
+      "rarity": "rare",
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "rarity": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 4,
+      "row": 0,
+      "column": 3,
+      "state": "prisoner",
+      "species": "rat",
+      "rarity": "legendary",
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "rarity": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 5,
+      "row": 0,
+      "column": 4,
+      "state": "prisoner",
+      "species": "mammoth",
+      "rarity": "supreme",
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "rarity": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 6,
+      "row": 0,
+      "column": 5,
+      "state": "unknown",
+      "species": null,
+      "rarity": null,
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "rarity": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 7,
+      "row": 1,
+      "column": 5,
+      "state": "locked",
+      "species": null,
+      "rarity": null,
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "rarity": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 8,
+      "row": 2,
+      "column": 5,
+      "state": "empty",
+      "species": null,
+      "rarity": null,
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "rarity": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 9,
+      "row": 3,
+      "column": 5,
+      "state": "prisoner",
+      "species": "mammoth",
+      "rarity": "rare",
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "rarity": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 10,
+      "row": 3,
+      "column": 4,
+      "state": "event",
+      "species": null,
+      "rarity": null,
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "rarity": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 11,
+      "row": 3,
+      "column": 3,
+      "state": "unknown",
+      "species": null,
+      "rarity": null,
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "rarity": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 12,
+      "row": 3,
+      "column": 2,
+      "state": "locked",
+      "species": null,
+      "rarity": null,
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "rarity": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 13,
+      "row": 3,
+      "column": 1,
+      "state": "empty",
+      "species": null,
+      "rarity": null,
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "rarity": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 14,
+      "row": 3,
+      "column": 0,
+      "state": "prisoner",
+      "species": "lion",
+      "rarity": "magic",
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "rarity": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 15,
+      "row": 2,
+      "column": 0,
+      "state": "event",
+      "species": null,
+      "rarity": null,
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "rarity": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    },
+    {
+      "id": 16,
+      "row": 1,
+      "column": 0,
+      "state": "unknown",
+      "species": null,
+      "rarity": null,
+      "markers": null,
+      "event": null,
+      "evidence": {
+        "state": {
+          "source": "manual",
+          "confidence": null,
+          "note": "使用者修正，非辨識信心"
+        },
+        "species": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "rarity": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        },
+        "markers": {
+          "source": "unknown",
+          "confidence": null,
+          "note": ""
+        }
+      }
+    }
+  ],
+  "warden": null,
+  "currentDay": null,
+  "daysRemaining": null,
+  "patrolOptions": null,
+  "tools": null,
+  "resources": null,
+  "collected": null,
+  "reviewedAt": null,
+  "evidence": {
+    "source": "unknown",
+    "confidence": null,
+    "note": ""
+  },
+  "fieldEvidence": {}
+}

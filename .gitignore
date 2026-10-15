@@ -11,3 +11,6 @@ Thumbs.db
 *.log
 # Local research screenshots have no verified public redistribution license.
 docs/research/evidence/
+.wrangler/
+.dev.vars*
+dist-worker/

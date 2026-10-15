@@ -6,10 +6,15 @@ import { createBoard, type Board, type Rect } from './model';
 import { BoardEditor } from './BoardEditor';
 import { exportBoardJSON, parseBoardJSON } from './json';
 import { possibleActions, type RuleMode } from './rules';
+import { FeedbackDialog } from './FeedbackDialog';
+import type { ReportContext } from './feedback';
 
 const FULL: Rect = { x: 0, y: 0, width: 1, height: 1 };
 export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
   const [board, setBoard] = useState<Board>(createBoard);
+  const [editing, setEditing] = useState(false);
+  const [recognized, setRecognized] = useState<Board | null>(null);
+  const [report, setReport] = useState<ReportContext | null>(null);
   const [image, setImage] = useState<{ url: string; profile: 'game' | 'synthetic'; label: string } | null>(null);
   const [region, setRegion] = useState<Rect | null>(null);
   const [message, setMessage] = useState('可直接手動建立盤面，或載入自製測試圖片。真實遊戲模板尚不足。');
@@ -21,11 +26,11 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
   function updateBoard(value: Board) { setBoard(value); }
   async function run(url: string, profile: 'game' | 'synthetic', crop: Rect | null) {
     controller.current?.abort(); const request = new AbortController(); controller.current = request;
-    setBusy(true); setError('');
+    setBusy(true); setError(''); setEditing(false); setReport(null); setRecognized(null);
     try {
       const result = await analyzeImage(url, profile, crop, request.signal);
       if (request.signal.aborted) return;
-      setBoard(result.board); setRegion(result.region); setMessage(result.message);
+      setBoard(result.board); setRecognized(result.board); setRegion(result.region); setMessage(result.message);
     } catch (e) { if (!request.signal.aborted) { setBoard(createBoard()); setMessage('辨識失敗，盤面已保留為未知，可手動編輯。'); setError(e instanceof Error ? e.message : '無法辨識圖片'); } }
     finally { if (!request.signal.aborted) setBusy(false); }
   }
@@ -45,7 +50,7 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
     replaceImage(URL.createObjectURL(file), 'game', file.name.slice(0, 100), true);
   }
   function importJSON(text: string) {
-    try { const next = parseBoardJSON(text); controller.current?.abort(); setBusy(false); setBoard(next); setError(''); setMessage('已匯入盤面；來源為檔案自述，請人工核對後確認。'); }
+    try { const next = parseBoardJSON(text); controller.current?.abort(); setBusy(false); setBoard(next); setRecognized(null); setImage(null); setRegion(null); setReport(null); setEditing(false); setError(''); setMessage('已匯入盤面；來源為檔案自述，請人工核對後確認。'); }
     catch (e) { setError(e instanceof Error ? e.message : 'JSON 格式錯誤'); }
   }
   function readJSON(file: File | undefined) {
@@ -63,6 +68,9 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
   return <>
     <section className="panel recognition-panel" aria-labelledby="recognition-heading">
       <div className="panel-heading"><h2 id="recognition-heading"><span className="step">02</span> 盤面辨識與修正</h2><span className="soon">前瞻布局</span></div>
+      <div className="board-actions"><button className="secondary" disabled={busy} aria-pressed={editing} onClick={() => setEditing(!editing)}>{editing ? '完成修正' : '修正盤面'}</button>
+        <button className="secondary" disabled={busy || !image} onClick={() => { if (image) setReport({ image, recognized, board, region }); }}>回報辨識錯誤</button></div>
+      {!image && <p className="muted">回報需要先截圖或載入圖片；可直接進入修正模式建立盤面。</p>}
       <div className="board-actions"><button className="secondary" disabled={busy} onClick={() => { try { replaceImage(testImageURL(), 'synthetic', '自製色碼測試圖（非遊戲畫面）'); } catch (e) { setError(String(e)); } }}>載入測試圖片</button>
         <label className="file-button">載入本機圖片<input type="file" aria-label="載入本機圖片" accept="image/png,image/jpeg,image/webp" disabled={busy} onChange={e => { loadImage(e.target.files?.[0]); e.target.value = ''; }} /></label></div>
       <p className="notice" role="status">{busy ? '正在本機解碼與辨識…' : message}</p>
@@ -82,7 +90,8 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
           <button className="quiet" disabled={busy} onClick={() => { setRegion(null); void run(image.url, image.profile, null); }}>重新自動定位</button></div>
       </details>}
       {error && <p role="alert" className="notice error">{error}</p>}
-      <BoardEditor board={board} onChange={updateBoard} disabled={busy} />
+      <BoardEditor board={board} onChange={updateBoard} disabled={busy} editing={editing} />
+      {report && <FeedbackDialog context={report} onClose={() => setReport(null)} />}
       <details className="json-panel"><summary>匯入／匯出盤面 JSON</summary><p className="muted">只包含結構化盤面，不含圖片；匯入檔案仍須重新確認。<a href={`${import.meta.env.BASE_URL}examples/test-board.json`} download="test14-example.json">下載原創測試 JSON</a></p>
         <textarea aria-label="盤面 JSON" value={json} maxLength={1_000_001} onChange={e => setJson(e.target.value)} spellCheck={false} />
         <div className="board-actions"><button className="secondary" disabled={busy} onClick={downloadJSON}>匯出 JSON</button><button className="secondary" disabled={busy} onClick={() => importJSON(json)}>匯入 JSON</button>

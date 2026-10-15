@@ -20,11 +20,11 @@ export default function App() {
           <div className="capture-meta"><span>{snapshot ? `擷取於 ${snapshot.capturedAt.toLocaleString('zh-TW', { hour12: false })}` : '尚無截圖'}</span><span>{snapshot ? `${snapshot.width} × ${snapshot.height} px` : '— × — px'}</span></div>
           {snapshot?.warning && <p className="notice" role="status">{snapshot.warning}</p>}
           <button className="primary" disabled={!sharing || capturing} onClick={capture}><span>⌗</span> {capturing ? '正在擷取…' : '分析棋盤'} <small>截圖並嘗試本機辨識</small></button>
-          <p className="privacy">◇ 截圖僅在瀏覽器記憶體中處理，不上傳伺服器；重新整理即清除。</p>
+          <p className="privacy">◇ 截圖在本機處理；只有同意並確認錯誤回報才會外傳該次圖片與盤面。</p>
         </section>
         <BoardWorkspace snapshot={snapshot} />
       </div>
-      <footer><span>Tartarus Planner <b>·</b> SS14</span><span>本機處理 / 無後端 / 手動截圖</span></footer>
+      <footer><span>Tartarus Planner <b>·</b> SS14</span><span>本機辨識 / 自願回報 / 手動截圖</span></footer>
     </main>
   </div>;
 }

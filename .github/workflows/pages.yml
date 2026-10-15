@@ -35,6 +35,8 @@ jobs:
             echo "VITE_BASE_PATH=/$repo/" >> "$GITHUB_ENV"
           fi
       - run: pnpm run build
+        env:
+          VITE_REPORT_ENDPOINT: ${{ vars.VITE_REPORT_ENDPOINT }}
       - uses: actions/upload-pages-artifact@v3
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         with:

@@ -4,7 +4,7 @@ export const RARITIES = ['normal', 'magic', 'rare', 'legendary', 'supreme', 'rai
 export type Rarity = typeof RARITIES[number];
 export const STATES = ['unknown', 'locked', 'empty', 'prisoner', 'event'] as const;
 export type CellState = typeof STATES[number];
-export const speciesNames: Record<Species, string> = { mammoth: '象', lion: '獅', wolf: '狼', rat: '鼠' };
+export const speciesNames: Record<Species, string> = { mammoth: '老象P', lion: '惡魔獅', wolf: '狼阿奇', rat: '低欸鼠' };
 export const rarityNames: Record<Rarity, string> = { normal: '普通', magic: '魔法', rare: '稀有', legendary: '傳奇', supreme: '至臻（暫定）', rainbow: '綺彩' };
 export const stateNames: Record<CellState, string> = { unknown: '未知', locked: '封閉', empty: '空格', prisoner: '囚犯', event: '特殊事件' };
 export interface Evidence { source: 'unknown' | 'manual' | 'synthetic' | 'image'; confidence: number | null; note: string }

@@ -22,7 +22,7 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
   const editBefore = useRef<Board | null>(null);
   const [image, setImage] = useState<{ url: string; profile: 'game' | 'synthetic'; label: string } | null>(null);
   const [region, setRegion] = useState<Rect | null>(null);
-  const [message, setMessage] = useState('可直接手動建立盤面，或載入自製測試圖片。真實遊戲模板尚不足。');
+  const [message, setMessage] = useState('');
   const [error, setError] = useState(''); const [busy, setBusy] = useState(false);
   const [json, setJson] = useState(''); const [mode, setMode] = useState<RuleMode>('verified-only');
   const controller = useRef<AbortController | null>(null);
@@ -84,16 +84,13 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
   }
   return <>
     <section className="panel recognition-panel" aria-labelledby="recognition-heading">
-      <div className="panel-heading"><h2 id="recognition-heading"><span className="step">02</span> 盤面辨識與修正</h2><span className="soon">前瞻布局</span></div>
-      <div className="board-actions"><button className="secondary" disabled={busy} aria-pressed={editing} onClick={() => { if (!editing) editBefore.current = board; else if (editBefore.current) { const diff = boardDiff(editBefore.current, board); if (diff.cells.length || diff.globals.length) track('manual_correction_saved', { operation_result: 'success', analysis_mode: videoFrame ? 'video' : 'screenshot', correction_count: diff.cells.length }); } setEditing(!editing); }}>{editing ? '完成修正' : '修正盤面'}</button>
-        <button className="secondary" disabled={busy || !image} onClick={() => { if (image) setReport({ image, recognized, board, region }); }}>回報辨識錯誤</button></div>
-      {!image && <p className="muted">回報需要先截圖或載入圖片；可直接進入修正模式建立盤面。</p>}
-      <VideoLab board={board} recognized={recognized} region={region} current={videoFrame} busy={busy} onFrame={(frame, time, profile) => replaceImage(frame.url, profile, '本機影片手動影格', true, time)} onLoad={loadLabeled} onSourceChange={() => { controller.current?.abort(); setBusy(false); setImage(null); setVideoFrame(null); setRecognized(null); setBoard(createBoard()); setReport(null); }} />
-      <div className="board-actions"><button className="secondary" disabled={busy} onClick={() => { try { replaceImage(testImageURL(), 'synthetic', '自製色碼測試圖（非遊戲畫面）'); } catch (e) { setError(String(e)); } }}>載入測試圖片</button>
-        <label className="file-button">載入本機圖片<input type="file" aria-label="載入本機圖片" accept="image/png,image/jpeg,image/webp" disabled={busy} onChange={e => { loadImage(e.target.files?.[0]); e.target.value = ''; }} /></label></div>
-      <p className="notice" role="status">{busy ? '正在本機解碼與辨識…' : message}</p>
+      <div className="panel-heading recognition-heading"><h2 id="recognition-heading"><span className="step">02</span> 盤面辨識與修正</h2>
+      <div className="board-actions recognition-tools" role="group" aria-label="盤面工具"><button className="secondary" disabled={busy} aria-pressed={editing} onClick={() => { if (!editing) editBefore.current = board; else if (editBefore.current) { const diff = boardDiff(editBefore.current, board); if (diff.cells.length || diff.globals.length) track('manual_correction_saved', { operation_result: 'success', analysis_mode: videoFrame ? 'video' : 'screenshot', correction_count: diff.cells.length }); } setEditing(!editing); }}>{editing ? '完成修正' : '修正盤面'}</button>
+        <button className="secondary" disabled={busy || !image} onClick={() => { if (image) setReport({ image, recognized, board, region }); }}>回報辨識錯誤</button>
+      <button className="secondary" disabled={busy} onClick={() => { try { replaceImage(testImageURL(), 'synthetic', '自製色碼測試圖（非遊戲畫面）'); } catch (e) { setError(String(e)); } }}>載入測試圖片</button>
+        <label className="file-button">載入本機圖片<input type="file" aria-label="載入本機圖片" accept="image/png,image/jpeg,image/webp" disabled={busy} onChange={e => { loadImage(e.target.files?.[0]); e.target.value = ''; }} /></label></div></div>
+      <p className="sr-only" role="status">{busy ? '正在本機解碼與辨識…' : message}</p>
       {image && <details open><summary>圖片與手動選區 · {image.label}</summary>
-        <p className="muted">拖曳框選外圈邊框，或輸入百分比，再按「套用選區辨識」。新結果會重設盤面，請先匯出要保留的修正。</p>
         <div className="image-selection" onPointerDown={e => { if (busy) return; selectionStart.current = point(e); e.currentTarget.setPointerCapture(e.pointerId); }} onPointerMove={e => {
           if (!selectionStart.current) return; const end = point(e), start = selectionStart.current;
           setRegion({ x: Math.min(start.x, end.x), y: Math.min(start.y, end.y), width: Math.abs(end.x - start.x), height: Math.abs(end.y - start.y) });
@@ -115,6 +112,7 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
         <div className="board-actions"><button className="secondary" disabled={busy} onClick={downloadJSON}>匯出 JSON</button><button className="secondary" disabled={busy} onClick={() => importJSON(json)}>匯入 JSON</button>
           <label className="file-button">選擇 JSON 檔<input aria-label="選擇 JSON 檔" type="file" accept="application/json,.json" disabled={busy} onChange={e => { readJSON(e.target.files?.[0]); e.target.value = ''; }} /></label></div>
       </details>
+      <VideoLab board={board} recognized={recognized} region={region} current={videoFrame} busy={busy} onFrame={(frame, time, profile) => replaceImage(frame.url, profile, '本機影片手動影格', true, time)} onLoad={loadLabeled} onSourceChange={() => { controller.current?.abort(); setBusy(false); setImage(null); setVideoFrame(null); setRecognized(null); setBoard(createBoard()); setReport(null); }} />
     </section>
     <section className="panel suggestions-panel"><div className="panel-heading"><h2><span className="step">03</span> 下一步建議</h2><span className="soon">策略引擎尚未開放</span></div>
       <p className="notice">{actions.message}</p><label>規則模式<select aria-label="規則模式" value={mode} onChange={e => setMode(e.target.value as RuleMode)}><option value="verified-only">保守模式：僅顯示已確認盤面選項</option><option value="experimental-single">實驗：單一食物鏈假設</option><option value="experimental-two">實驗：雙食物鏈假設</option></select></label>
@@ -124,3 +122,6 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
     </section>
   </>;
 }
+
+
+

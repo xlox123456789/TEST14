@@ -5,7 +5,12 @@ export interface Env {
   ALLOWED_ORIGIN: string;
   REPORTS: { put(key: string, value: Blob | string, options?: { httpMetadata: { contentType: string } }): Promise<unknown>; delete(key: string): Promise<void> };
   REPORT_RATE_LIMITER: { limit(options: { key: string }): Promise<{ success: boolean }> };
+  QUOTA_DB: { prepare(query: string): { bind(...values: (string | number)[]): { first(): Promise<Record<string, unknown> | null> } } };
 }
+// One atomic SQLite statement for the entire site, including concurrent Workers.
+export const RESERVE_QUOTA = `INSERT INTO daily_quota (day, used) VALUES (?, 1)
+  ON CONFLICT(day) DO UPDATE SET used = daily_quota.used + 1 WHERE daily_quota.used < 200 RETURNING used`;
+export const taipeiDay = (now: number) => new Date(now + 8 * 60 * 60 * 1000).toISOString().slice(0, 10);
 const MAX_BODY = 18 * 1024 * 1024;
 async function boundedBody(request: Request): Promise<Uint8Array<ArrayBuffer>> {
   if (!request.body) throw new Error('empty');
@@ -44,6 +49,12 @@ export default {
       if (data.schemaVersion !== 1 || data.consent !== true || !['game', 'synthetic'].includes(data.profile) || typeof data.version !== 'string' || data.version.length > 80 || !Number.isFinite(Date.parse(data.reportedAt)) || (data.region !== null && !validRegion(data.region))) return reply(400, { error: 'Invalid report' });
       const correctedBoard = parseBoardJSON(JSON.stringify(data.correctedBoard));
       const recognizedBoard = data.recognizedBoard === null ? null : parseBoardJSON(JSON.stringify(data.recognizedBoard));
+      // Reserve before writing either object; failures consume quota conservatively.
+      // If D1 is unavailable, fail closed rather than bypassing the daily cap.
+      let quota;
+      try { quota = await env.QUOTA_DB.prepare(RESERVE_QUOTA).bind(taipeiDay(Date.now())).first(); }
+      catch { return reply(503, { error: 'Quota unavailable' }); }
+      if (!quota) return reply(429, { error: 'Daily limit reached' });
       const id = crypto.randomUUID(); const prefix = `${new Date().toISOString().slice(0, 10)}/${id}`;
       const ext = image.type === 'image/png' ? 'png' : image.type === 'image/jpeg' ? 'jpg' : 'webp';
       const imageKey = `${prefix}/screenshot.${ext}`;

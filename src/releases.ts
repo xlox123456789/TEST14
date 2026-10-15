@@ -1,6 +1,7 @@
 // 新增重大功能時，必須在最前面補上日期、版號與使用者可理解的摘要。
 // 歷史日期依 Git 提交回補；回補版號不是既有 Git tag。
 export const releases = [
+  { version: '2026.10.15.3', date: '2026-10-15', notes: '匿名回報接收服務：私人儲存、30天清除、每IP限流與全站每日200筆額度（台灣時間重置）。', backfilled: false },
   { version: '2026.10.15.2', date: '2026-10-15', notes: '四獸名稱更新、獨立修正模式、辨識錯誤回報介面與版本紀錄。', backfilled: false },
   { version: '2026.10.15.1', date: '2026-10-15', notes: '第二階段：盤面資料模型、測試圖片辨識、手動編輯、JSON 匯入匯出與規則研究。', backfilled: true },
   { version: '2026.10.14.4', date: '2026-10-14', notes: '移除介紹區文字；教學加入分享按鈕與私人內容提醒。', backfilled: true },

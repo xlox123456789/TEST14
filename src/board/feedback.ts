@@ -17,6 +17,7 @@ export async function sendReport(context: ReportContext, endpoint: string, signa
   data.append('report', new Blob([JSON.stringify({ schemaVersion: 1, version: currentVersion, reportedAt: new Date().toISOString(), consent: true,
     profile: context.image.profile, region: context.region, recognizedBoard: context.recognized, correctedBoard: context.board })], { type: 'application/json' }), 'report.json');
   const response = await fetch(endpoint, { method: 'POST', body: data, signal, credentials: 'omit', referrerPolicy: 'no-referrer', redirect: 'error' });
+  if (response.status === 429) throw new Error('今日全站200筆回報額度已滿，或回報過於頻繁。請稍後或明天再試（台灣時間每日00:00重置）。');
   if (!response.ok) throw new Error('回報未送出，接收服務拒絕或暫時無法使用，請稍後再試');
   const receipt = await response.json();
   if (receipt.ok !== true || typeof receipt.id !== 'string') throw new Error('未取得有效回報收據，無法確認是否成功');

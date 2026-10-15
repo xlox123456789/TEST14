@@ -24,6 +24,7 @@ export function FeedbackDialog({ context, onClose }: { context: ReportContext; o
     <div className="info-content">
       <p><strong>將分享以下完整圖片，以及原始辨識結果、目前修正盤面、選區與版號，供維護者改進辨識。</strong>不需要登入 GitHub。</p>
       <p className="notice"><strong>圖片可能包含角色名稱、聊天或其他私人內容。請先檢查，避免分享私人資訊。</strong></p>
+      <p className="muted">全站每日最多200筆，台灣時間00:00重置；另有每IP短時間限流。</p>
       <img className="report-preview" src={context.image.url} alt="即將分享的完整回報圖片" />
       <details><summary>檢查將分享的盤面資料</summary><pre>{JSON.stringify({ recognizedBoard: context.recognized, correctedBoard: context.board, region: context.region, profile: context.image.profile }, null, 2)}</pre></details>
       {!endpoint && <p role="status" className="notice">回報接收服務尚未設定，目前無法傳送。圖片與盤面仍留在本機。</p>}

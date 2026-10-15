@@ -45,7 +45,7 @@ export function SiteInfo({ onStartShare, shareDisabled, sharing }: { onStartShar
         <h3>簡單版</h3><p>本站不需要註冊、不要求姓名或電子郵件，也沒有帳號系統。一般分享、截圖與辨識都在自己的瀏覽器中處理。只有主動同意並送出錯誤回報，才會傳送該次圖片與盤面資料；不傳給 AI 服務。</p>
         <h3>截圖與盤面存在哪裡</h3><p>截圖、載入的圖片及盤面只保留在目前分頁的記憶體，重新整理或關閉後清除。不使用 sessionStorage、localStorage 或 Cookie 儲存截圖。匯出 JSON 只下載結構化盤面到你選擇的位置，不包含圖片；匯入與辨識都在本機處理。請自行妥善保管匯出檔案。</p>
         <h3>流量分析 · GA4 尚未啟用</h3><p>本站目前未載入 Google Analytics 4，也不會送出 GA4 分析事件或設定 GA4 Cookie。若未來啟用，會先更新本頁，說明收集的資料、用途與控制方式；遊戲畫面與截圖不會作為流量分析資料上傳。</p>
-        <h3>自願回報辨識錯誤</h3><p>只有在回報視窗勾選同意並確認送出後，才會將該次完整圖片、原始辨識盤面、目前修正盤面、選區與工具版號傳到維護者管理的 Cloudflare Worker 與私人 R2 儲存桶，供改善辨識。請先檢查圖片中的角色名稱、聊天與私人內容。未設定接收服務時無法送出；不會自動改成公開 GitHub Issue，也不要求使用者登入 GitHub。回報不公開，預計保留最多30天；接收服務以 IP 限流但不將 IP 寫入回報檔。Cloudflare 仍可能依其服務政策處理連線資料。送出後不能由本頁撤回，資料問題請聯絡維護者並提供回報時間。</p>
+        <h3>自願回報辨識錯誤</h3><p>只有在回報視窗勾選同意並確認送出後，才會將該次完整圖片、原始辨識盤面、目前修正盤面、選區與工具版號傳到維護者管理的 Cloudflare Worker 與私人 R2 儲存桶，供改善辨識。請先檢查圖片中的角色名稱、聊天與私人內容。未設定接收服務時無法送出；不會自動改成公開 GitHub Issue，也不要求使用者登入 GitHub。回報不公開，設定於上傳滿30天後自動清除，實際清除時間依 Cloudflare 排程。接收服務以 IP 限流但不將 IP 寫入回報檔；D1 僅保存每日總筆數以執行全站每日200筆額度。Cloudflare 仍可能依其服務政策處理連線資料。送出後不能由本頁撤回，資料問題請聯絡維護者並提供回報時間及收據編號。</p>
         <p>GA4 一般可能使用 Cookie 與裝置／瀏覽器相關資料衡量網站使用情形；不應將它描述為完全不涉及識別資訊。詳見 <a href="https://support.google.com/analytics/answer/6004245" target="_blank" rel="noopener noreferrer">Google 的資料保護說明</a>。</p>
         <h3>網站託管與外部服務</h3><p>本站由 GitHub Pages 託管。開啟網站仍會向託管服務請求網頁與靜態檔案，服務供應商可能依自己的政策處理連線資料。詳見 <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub 隱私權聲明</a>。</p>
         <p>Ko-fi 是外部贊助平台。只有點擊連結才會前往，本站沒有嵌入 Ko-fi 追蹤元件；在 Ko-fi 的付款、Cookie 與資料處理由該平台負責。</p>

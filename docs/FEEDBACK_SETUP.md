@@ -78,4 +78,4 @@ POST `/reports` 使用 multipart，包含 `image` 與 `report`。圖片限 PNG/J
 - [Rate Limiting binding 與限制](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/)
 - [R2 物件生命週期](https://developers.cloudflare.com/r2/buckets/object-lifecycles/)
 
-接收器測試以 mock R2／rate limiter 執行；尚未代替真實 Cloudflare 整合驗證。
+除 mock R2／rate limiter 單元測試外，已完成真實 Cloudflare D1 額度邊界及正式站→Worker→私人R2 圖片／JSON 收件驗證，詳見 TEST_RESULTS.md。管理者可到 R2 的日期／收據編號資料夾下載回報；回報不會寄信通知，也不寫入公開 GitHub。

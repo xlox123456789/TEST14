@@ -49,4 +49,7 @@ Repository：https://github.com/xlox123456789/torchlight-infinite-ss14-tartarus-
 - 網站正式建置與 Worker 單檔建置通過。
 - 真實 SQLite 測試同日250次申請只有200次成功，次日重新計數；台灣午夜邊界測試通過。
 - 真實 Cloudflare D1 用獨立測試鍵驗證199→200成功，下一筆無更新且仍為200；不占用當日正式額度。測試鍵 integration-limit-check 保留作驗證紀錄。
-- 已透過 Wrangler 部署 Worker，核對 R2／D1／Rate Limiter 繫結與已啟用的30天到期清除規則。正式站收件流程待以下實際驗證補記；真實遊戲再次分享仍需人工測試。
+- 已透過 Wrangler 部署 Worker，核對 R2／D1／Rate Limiter 繫結與已啟用的30天到期清除規則。真實遊戲再次分享仍需人工測試。
+- 正式站 2026.10.15.3 的匿名回報已實際送出成功（未登入 GitHub 收件流程，不經 Issues）；收據 `11c15675-187e-4fc5-ade7-a8ecb67fe7e6`。
+- 從私人 R2 讀回980×740 PNG（29,473 bytes）及 JSON，確認16格、版本、synthetic 標記、原始格2 lion 與修正後 rat 各自保存。真實 D1 當日計數為1。測試回報保留供核對，依30天規則到期清除。
+- GitHub Actions run 38676056150 的 build／deploy 均 Success，正式頁面顯示 2026.10.15.3，回報收據已保存為驗證畫面。

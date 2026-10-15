@@ -71,3 +71,7 @@ Repository：https://github.com/xlox123456789/torchlight-infinite-ss14-tartarus-
 - GA4開發流量篩選「有效」已確認，但官方說明可能需24–36小時生效，本次即時報表仍顯示QA；一般報表最終排除尚未驗證。
 - 標註PNG下載已通過，原先data URL下載等待未完成，改為Blob URL後成功下載並檢查畫面。
 - 本次未重新在正式站擷取實際遊戲視窗，因此capture_started／capture_completed／capture_failed只有程式接線與自動化回歸，未確認本次GA4後台收件。正式開服樣本、多解析度實戰、刑具／連鎖／升階機率、收益與最佳策略仍未知。
+
+### 最終像素回歸補強
+
+增加node:zlib讀取已存瀏覽器PNG影格的測試輔助程式（僅測試端，可信原創素材限定），每次CI直接重跑目前recognizeRaster並比對獨立的before／after標註，兩張25/25。不是僅比較舊辨識JSON。最終12個測試檔共83項通過，型別檢查通過；新增測試不改變網站執行期或辨識演算法。

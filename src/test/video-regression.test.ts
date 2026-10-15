@@ -1,5 +1,6 @@
 // @vitest-environment node
 import { readFileSync } from 'node:fs';
+import { decodeFixturePNG } from './png-fixture';
 import { expect, it } from 'vitest';
 import { parseBoardJSON } from '../board/json';
 import { makeTestRaster, recognizeRaster } from '../recognition/raster';
@@ -26,3 +27,11 @@ it('browser-decoded WebM results match independent before/after truth and preser
   expect(dataset.operations[0].before.board.cells[1].species).toBe('lion');
   expect(dataset.operations[0].after.board.cells[1].species).toBe('rat');
 });
+
+it.each([0,1])('reruns recognition on browser-decoded video pixels for frame %s',index=>{
+  const dataset=JSON.parse(readFileSync(new URL('../../public/fixtures/browser-webm-dataset.json',import.meta.url),'utf8'));
+  const label=index===0?truth:parseBoardJSON(readFileSync(new URL('../../public/fixtures/expected-after.json',import.meta.url),'utf8'));
+  const result=recognizeRaster(decodeFixturePNG(dataset.frames[index].imagePng),'synthetic',null);
+  expect(recognitionScore(result.board,label)).toMatchObject({correct:25,total:25,errors:[]});
+});
+

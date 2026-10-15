@@ -38,7 +38,7 @@ export function SiteInfo({ onStartShare, shareDisabled, sharing }: { onStartShar
     <dialog ref={privacy} className="info-modal" aria-labelledby="privacy-title" onClick={closeOnBackdrop}>
       <div className="modal-heading"><h2 id="privacy-title">免責聲明與隱私權</h2><button onClick={() => privacy.current?.close()} aria-label="關閉免責聲明與隱私權">×</button></div>
       <div className="info-content">
-        <p className="eyebrow">更新日期：2026-10-15</p><h2>免責聲明</h2>
+        <p className="eyebrow">更新日期：2026-10-16</p><h2>免責聲明</h2>
         <p>本站是玩家製作的非官方工具，與《火炬之光：無限》的開發商、發行商或營運團隊沒有隸屬關係。遊戲名稱與相關商標屬其各自權利人。</p>
         <p>目前提供畫面分享、手動截圖、測試圖辨識與盤面修正。真實遊戲圖示模板與正式規則尚未充分驗證，未知欄位須人工核對；實驗模式不是正式服合法性或最佳策略保證。擷取可能受瀏覽器、作業系統、顯示卡與遊戲模式影響，本站不保證帶來特定遊戲收益。</p>
         <h2>隱私權政策</h2>
@@ -57,4 +57,5 @@ export function SiteInfo({ onStartShare, shareDisabled, sharing }: { onStartShar
     </dialog>
   </nav>;
 }
+
 

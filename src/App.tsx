@@ -8,7 +8,7 @@ export default function App() {
   const { videoRef, supported, status, capturing, error, snapshot, start, stop, capture } = useScreenCapture();
   const sharing = status === 'sharing';
   return <div className="app">
-    <header><a className="brand" href="#"><span className="brand-mark">T</span><span>Tartarus <b>Planner</b><small>TORCHLIGHT: INFINITE · SS14</small></span></a><div className="header-tools"><SiteInfo onStartShare={start} shareDisabled={!supported || status === 'requesting'} sharing={sharing} /><span className="phase">PHASE 02 <i/> 盤面辨識與修正</span></div></header>
+    <header><a className="brand" href="#"><span className="brand-mark">T</span><span>塔羅斯<small>TORCHLIGHT: INFINITE · SS14</small></span></a><div className="header-tools"><SiteInfo onStartShare={start} shareDisabled={!supported || status === 'requesting'} sharing={sharing} /><span className="phase">PHASE 02 <i/> 盤面辨識與修正</span></div></header>
     <main>
       <Analytics />
       <div className="workspace">

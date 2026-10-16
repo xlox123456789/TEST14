@@ -9,6 +9,7 @@ import { FeedbackDialog } from './FeedbackDialog';
 import type { ReportContext } from './feedback';
 import { boardDiff } from '../video/history';
 import { track } from '../analytics/analytics';
+import { AnimalRelations } from './AnimalRelations';
 
 const FULL: Rect = { x: 0, y: 0, width: 1, height: 1 };
 export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
@@ -88,6 +89,7 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
       {mode !== 'verified-only' && <p className="notice">實驗結果不是正式服合法性保證；不模擬升階、每日消耗或連鎖，也不選最佳步。</p>}
       <ul>{actions.blockedBy.map(reason => <li key={reason}>{reason}</li>)}</ul>
       {actions.candidates.length > 0 && <><h3>可能操作（未排序）</h3><ul>{actions.candidates.map((action, index) => <li key={index}>{action.kind === 'patrol' ? `巡視位置 ${action.target}` : `實驗：${action.actor} → 吞食 ${action.target}`}：{action.explanation}</li>)}</ul></>}
+      <AnimalRelations />
     </section>
   </>;
 }

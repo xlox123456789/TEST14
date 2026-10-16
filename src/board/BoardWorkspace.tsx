@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Snapshot } from '../capture/frame';
-import { analyzeImage, testImageURL } from '../recognition/image';
+import { analyzeImage } from '../recognition/image';
 import { cellRegions, validRegion } from '../recognition/raster';
 import { createBoard, type Board, type Rect } from './model';
 import { BoardEditor } from './BoardEditor';
-import { exportBoardJSON, parseBoardJSON } from './json';
 import { possibleActions, type RuleMode } from './rules';
 import { FeedbackDialog } from './FeedbackDialog';
 import type { ReportContext } from './feedback';
-import { VideoLab } from '../video/VideoLab';
-import { boardDiff, type LabeledFrame } from '../video/history';
+import { boardDiff } from '../video/history';
 import { track } from '../analytics/analytics';
 
 const FULL: Rect = { x: 0, y: 0, width: 1, height: 1 };
@@ -18,18 +16,17 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
   const [editing, setEditing] = useState(false);
   const [recognized, setRecognized] = useState<Board | null>(null);
   const [report, setReport] = useState<ReportContext | null>(null);
-  const [videoFrame, setVideoFrame] = useState<{ url: string; timeSeconds: number; profile: 'game' | 'synthetic' } | null>(null);
   const editBefore = useRef<Board | null>(null);
   const [image, setImage] = useState<{ url: string; profile: 'game' | 'synthetic'; label: string } | null>(null);
   const [region, setRegion] = useState<Rect | null>(null);
   const [message, setMessage] = useState('');
   const [error, setError] = useState(''); const [busy, setBusy] = useState(false);
-  const [json, setJson] = useState(''); const [mode, setMode] = useState<RuleMode>('verified-only');
+  const [mode, setMode] = useState<RuleMode>('verified-only');
   const controller = useRef<AbortController | null>(null);
   const ownedURL = useRef<string | null>(null); const seenSnapshot = useRef<Snapshot | null>(null);
   const selectionStart = useRef<{ x: number; y: number } | null>(null);
   function updateBoard(value: Board) { setBoard(value); }
-  async function run(url: string, profile: 'game' | 'synthetic', crop: Rect | null, analysisMode: 'video' | 'screenshot' = videoFrame ? 'video' : 'screenshot') {
+  async function run(url: string, profile: 'game' | 'synthetic', crop: Rect | null, analysisMode: 'video' | 'screenshot' = 'screenshot') {
     controller.current?.abort(); const request = new AbortController(); controller.current = request;
     setBusy(true); setError(''); setEditing(false); setReport(null); setRecognized(null);
     const started = performance.now();
@@ -44,13 +41,12 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
     } catch (e) { if (!request.signal.aborted) { setBoard(createBoard()); setMessage('辨識失敗，盤面已保留為未知，可手動編輯。'); setError(e instanceof Error ? e.message : '無法辨識圖片'); track('board_recognition_failed', { analysis_mode: analysisMode, operation_result: 'failed' }); if (analysisMode === 'video') track('video_frame_analyzed', { analysis_mode: 'video', operation_result: 'failed' }); } }
     finally { if (!request.signal.aborted) setBusy(false); }
   }
-  function replaceImage(url: string, profile: 'game' | 'synthetic', label: string, owned = false, timeSeconds?: number) {
+  function replaceImage(url: string, profile: 'game' | 'synthetic', label: string, owned = false) {
     controller.current?.abort(); setBusy(false);
     if (ownedURL.current) URL.revokeObjectURL(ownedURL.current);
     ownedURL.current = owned ? url : null;
     setImage({ url, profile, label }); setRegion(null); setBoard(createBoard()); setError('');
-    setVideoFrame(timeSeconds === undefined ? null : { url, timeSeconds, profile });
-    void run(url, profile, null, timeSeconds === undefined ? 'screenshot' : 'video');
+    void run(url, profile, null, 'screenshot');
   }
   // This responds to an explicit single-frame capture, never polls the stream.
   useEffect(() => { if (snapshot && snapshot !== seenSnapshot.current) { seenSnapshot.current = snapshot; replaceImage(snapshot.url, 'game', '最近一次手動截圖'); } }, [snapshot]);
@@ -60,37 +56,16 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
     if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || file.size > 16 * 1024 * 1024) { setError('請選擇16 MB以內的 PNG、JPEG 或 WebP'); return; }
     replaceImage(URL.createObjectURL(file), 'game', file.name.slice(0, 100), true);
   }
-  function importJSON(text: string) {
-    try { const next = parseBoardJSON(text); controller.current?.abort(); setBusy(false); setBoard(next); setRecognized(null); setImage(null); setVideoFrame(null); setRegion(null); setReport(null); setEditing(false); setError(''); setMessage('已匯入盤面；來源為檔案自述，請人工核對後確認。'); }
-    catch (e) { setError(e instanceof Error ? e.message : 'JSON 格式錯誤'); }
-  }
-  function readJSON(file: File | undefined) {
-    if (!file) return;
-    if (file.size > 1_000_000) { setError('JSON 超過1 MB'); return; }
-    const reader = new FileReader(); reader.onload = () => { const value = String(reader.result); setJson(value); importJSON(value); }; reader.onerror = () => setError('檔案讀取失敗'); reader.readAsText(file);
-  }
-  function downloadJSON() {
-    const text = exportBoardJSON(board); setJson(text);
-    const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
-    const link = document.createElement('a'); link.href = url; link.download = 'test14-board.json'; link.click(); URL.revokeObjectURL(url);
-  }
   function point(event: React.PointerEvent<HTMLDivElement>) { const box = event.currentTarget.getBoundingClientRect(); return { x: Math.max(0, Math.min(1, (event.clientX - box.left) / box.width)), y: Math.max(0, Math.min(1, (event.clientY - box.top) / box.height)) }; }
   const actions = possibleActions(board, mode);
-  function loadLabeled(frame: LabeledFrame) {
-    controller.current?.abort(); setBusy(false); setReport(null); setEditing(false);
-    if (ownedURL.current) URL.revokeObjectURL(ownedURL.current); ownedURL.current = null;
-    setImage({ url: frame.imagePng, profile: frame.profile, label: '已載入的標註影格（人工資料）' }); setVideoFrame({ url: frame.imagePng, timeSeconds: frame.timeSeconds, profile: frame.profile });
-    setBoard(frame.board); setRecognized(frame.recognizedBoard); setRegion(frame.region); setMessage('已載入標註資料；請核對，匯入標註不代表辨識成功。');
-  }
   return <>
     <section className="panel recognition-panel" aria-labelledby="recognition-heading">
       <div className="panel-heading recognition-heading"><h2 id="recognition-heading"><span className="step">02</span> 盤面辨識與修正</h2>
-      <div className="board-actions recognition-tools" role="group" aria-label="盤面工具"><button className="secondary" disabled={busy} aria-pressed={editing} onClick={() => { if (!editing) editBefore.current = board; else if (editBefore.current) { const diff = boardDiff(editBefore.current, board); if (diff.cells.length || diff.globals.length) track('manual_correction_saved', { operation_result: 'success', analysis_mode: videoFrame ? 'video' : 'screenshot', correction_count: diff.cells.length }); } setEditing(!editing); }}>{editing ? '完成修正' : '修正盤面'}</button>
+      <div className="board-actions recognition-tools" role="group" aria-label="盤面工具"><button className="secondary" disabled={busy} aria-pressed={editing} onClick={() => { if (!editing) editBefore.current = board; else if (editBefore.current) { const diff = boardDiff(editBefore.current, board); if (diff.cells.length || diff.globals.length) track('manual_correction_saved', { operation_result: 'success', analysis_mode: 'screenshot', correction_count: diff.cells.length }); } setEditing(!editing); }}>{editing ? '完成修正' : '修正盤面'}</button>
         <button className="secondary" disabled={busy || !image} onClick={() => { if (image) setReport({ image, recognized, board, region }); }}>回報辨識錯誤</button>
-      <button className="secondary" disabled={busy} onClick={() => { try { replaceImage(testImageURL(), 'synthetic', '自製色碼測試圖（非遊戲畫面）'); } catch (e) { setError(String(e)); } }}>載入測試圖片</button>
         <label className="file-button">載入本機圖片<input type="file" aria-label="載入本機圖片" accept="image/png,image/jpeg,image/webp" disabled={busy} onChange={e => { loadImage(e.target.files?.[0]); e.target.value = ''; }} /></label></div></div>
       <p className="sr-only" role="status">{busy ? '正在本機解碼與辨識…' : message}</p>
-      {image && <details open><summary>圖片與手動選區 · {image.label}</summary>
+      {image && <details><summary>圖片與手動選區 · {image.label}</summary>
         <div className="image-selection" onPointerDown={e => { if (busy) return; selectionStart.current = point(e); e.currentTarget.setPointerCapture(e.pointerId); }} onPointerMove={e => {
           if (!selectionStart.current) return; const end = point(e), start = selectionStart.current;
           setRegion({ x: Math.min(start.x, end.x), y: Math.min(start.y, end.y), width: Math.abs(end.x - start.x), height: Math.abs(end.y - start.y) });
@@ -107,12 +82,6 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
       {error && <p role="alert" className="notice error">{error}</p>}
       <BoardEditor board={board} onChange={updateBoard} disabled={busy} editing={editing} />
       {report && <FeedbackDialog context={report} onClose={() => setReport(null)} />}
-      <details className="json-panel"><summary>匯入／匯出盤面 JSON</summary><p className="muted">只包含結構化盤面，不含圖片；匯入檔案仍須重新確認。<a href={`${import.meta.env.BASE_URL}examples/test-board.json`} download="test14-example.json">下載原創測試 JSON</a></p>
-        <textarea aria-label="盤面 JSON" value={json} maxLength={1_000_001} onChange={e => setJson(e.target.value)} spellCheck={false} />
-        <div className="board-actions"><button className="secondary" disabled={busy} onClick={downloadJSON}>匯出 JSON</button><button className="secondary" disabled={busy} onClick={() => importJSON(json)}>匯入 JSON</button>
-          <label className="file-button">選擇 JSON 檔<input aria-label="選擇 JSON 檔" type="file" accept="application/json,.json" disabled={busy} onChange={e => { readJSON(e.target.files?.[0]); e.target.value = ''; }} /></label></div>
-      </details>
-      <VideoLab board={board} recognized={recognized} region={region} current={videoFrame} busy={busy} onFrame={(frame, time, profile) => replaceImage(frame.url, profile, '本機影片手動影格', true, time)} onLoad={loadLabeled} onSourceChange={() => { controller.current?.abort(); setBusy(false); setImage(null); setVideoFrame(null); setRecognized(null); setBoard(createBoard()); setReport(null); }} />
     </section>
     <section className="panel suggestions-panel"><div className="panel-heading"><h2><span className="step">03</span> 下一步建議</h2><span className="soon">策略引擎尚未開放</span></div>
       <p className="notice">{actions.message}</p><label>規則模式<select aria-label="規則模式" value={mode} onChange={e => setMode(e.target.value as RuleMode)}><option value="verified-only">保守模式：僅顯示已確認盤面選項</option><option value="experimental-single">實驗：單一食物鏈假設</option><option value="experimental-two">實驗：雙食物鏈假設</option></select></label>
@@ -122,6 +91,3 @@ export function BoardWorkspace({ snapshot }: { snapshot: Snapshot | null }) {
     </section>
   </>;
 }
-
-
-

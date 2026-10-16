@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { BoardEditor } from '../board/BoardEditor';
 import { BoardWorkspace } from '../board/BoardWorkspace';
 import { createBoard } from '../board/model';
-import { exportBoardJSON } from '../board/json';
+
 import { recognizeRaster, makeTestRaster } from '../recognition/raster';
 import { analyzeImage } from '../recognition/image';
 vi.mock('../recognition/image', () => ({ analyzeImage: vi.fn(), testImageURL: () => 'data:image/png;base64,test' }));
@@ -32,28 +32,26 @@ describe('manual board editor and JSON workflow', () => {
     expect(screen.getByText(/典獄長：7/)).toBeInTheDocument();
     expect(screen.getByLabelText('剩餘天數')).toHaveValue(0);
   });
-  it('imports valid JSON, rejects malformed JSON without destroying existing state', () => {
+  it('keeps production editing while removing home-page development tools', () => {
     render(<BoardWorkspace snapshot={null} />);
-    fireEvent.click(screen.getByText('匯入／匯出盤面 JSON'));
-    const board = createBoard(); board.cells[3].state = 'locked';
-    fireEvent.change(screen.getByLabelText('盤面 JSON'), { target: { value: exportBoardJSON(board) } });
-    fireEvent.click(screen.getByRole('button', { name: '匯入 JSON' }));
-    expect(screen.getByRole('button', { name: '格子 4 封閉' })).toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText('盤面 JSON'), { target: { value: '{broken' } });
-    fireEvent.click(screen.getByRole('button', { name: '匯入 JSON' }));
-    expect(screen.getByRole('alert')).toBeInTheDocument(); expect(screen.getByRole('button', { name: '格子 4 封閉' })).toBeInTheDocument();
+    expect(screen.queryByText('匯入／匯出盤面 JSON')).not.toBeInTheDocument();
+    expect(screen.queryByText('影片回放測試模式（本機）')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '載入測試圖片' })).not.toBeInTheDocument();
+    expect(screen.getByLabelText('載入本機圖片')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '修正盤面' }));
+    fireEvent.change(screen.getByLabelText('狀態'), { target: { value: 'locked' } });
+    fireEvent.click(screen.getByRole('button', { name: '確認整個盤面' }));
+    expect(screen.getByRole('button', { name: '格子 1 封閉' })).toBeInTheDocument();
+    expect(screen.getByText(/盤面已確認/)).toBeInTheDocument();
   });
-  it('loads a synthetic image through recognition and exports its corrected structure', async () => {
+  it('recognizes an explicit snapshot and permits correcting its board', async () => {
     vi.mocked(analyzeImage).mockResolvedValue(recognizeRaster(makeTestRaster(), 'synthetic', null));
-    Object.defineProperty(URL, 'createObjectURL', { configurable: true, value: vi.fn(() => 'blob:export') });
-    Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, value: vi.fn() });
-    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
-    render(<BoardWorkspace snapshot={null} />);
-    fireEvent.click(screen.getByRole('button', { name: '載入測試圖片' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: '格子 3 囚犯' })).toBeEnabled());
-    fireEvent.click(screen.getByText('匯入／匯出盤面 JSON'));
-    fireEvent.click(screen.getByRole('button', { name: '匯出 JSON' }));
-    expect(JSON.parse((screen.getByLabelText('盤面 JSON') as HTMLTextAreaElement).value).cells[2].species).toBe('wolf');
+    render(<BoardWorkspace snapshot={{ url: 'blob:captured', width:980, height:740, capturedAt:new Date() }} />);
+    await waitFor(() => expect(screen.getByRole('button', { name: '格子 3 囚犯' })).toHaveTextContent('狼阿奇'));
+    fireEvent.click(screen.getByRole('button', { name: '修正盤面' }));
+    fireEvent.click(screen.getByRole('button', { name: '格子 3 囚犯' }));
+    fireEvent.change(screen.getByLabelText('野獸種類'), {target:{value:'rat'}});
+    expect(screen.getByRole('button', { name: '格子 3 囚犯' })).toHaveTextContent('低欸鼠');
   });
   it('does not apply stale recognition after a newer frame arrives', async () => {
     let oldResolve!: (v: Awaited<ReturnType<typeof analyzeImage>>) => void;
@@ -66,3 +64,4 @@ describe('manual board editor and JSON workflow', () => {
     expect(screen.getByRole('button', { name: '格子 3 未知' })).toBeInTheDocument();
   });
 });
+

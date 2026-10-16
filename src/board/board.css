@@ -10,3 +10,28 @@
 .info-content .privacy-summary p{font-size:18px;font-weight:700;line-height:1.9;color:#d6f6a9;margin-bottom:0}
 
 .recognition-heading{flex-wrap:wrap;gap:12px;align-items:center}.recognition-heading h2{white-space:nowrap}.recognition-heading .recognition-tools{margin:0 0 0 auto;justify-content:flex-end;gap:6px}.recognition-tools button,.recognition-tools .file-button{font-size:11px;padding:8px 10px;white-space:nowrap}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+
+/* Home workspace: desktop 25 / 43 / 32, tablet two columns, mobile one. */
+.app main{max-width:1800px;padding:24px 28px 0}
+.app header{padding-left:max(28px,calc((100vw - 1744px)/2));padding-right:max(28px,calc((100vw - 1744px)/2))}
+.app .workspace{grid-template-columns:minmax(0,25fr) minmax(0,43fr) minmax(0,32fr);gap:18px;align-items:start}
+.app .workspace>.panel{min-width:0;padding:20px}
+.app .suggestions-panel{grid-column:auto}
+.app .capture-panel{position:static}
+.app .capture-panel .panel-heading{flex-wrap:wrap}
+.app .capture-panel .instructions{margin:18px 0 16px;gap:10px}
+.app .capture-panel .actions{flex-wrap:wrap;margin-bottom:16px}
+.app .capture-panel .actions button{padding:10px 14px}
+.app .capture-panel .empty{padding:12px}
+.app .capture-panel .viewfinder{font-size:30px}
+.app .capture-panel .empty h3{font-size:13px;margin:8px 0}
+.app .capture-panel .empty p{font-size:11px;margin:5px 0}
+.app .capture-panel .empty-tag{margin-top:6px}
+.app .capture-panel .primary{flex-wrap:wrap;gap:8px;padding:12px}
+.app .capture-meta{flex-wrap:wrap;margin:12px 0 16px}
+.app .suggestions-panel .panel-heading{flex-wrap:wrap}
+.app .recognition-heading{margin-bottom:16px}
+.app .recognition-panel .prison-ring{margin:16px 0}
+.app .recognition-panel .prison-cell{min-height:72px}
+@media(max-width:1279px){.app .workspace{grid-template-columns:minmax(0,40fr) minmax(0,60fr)}.app .suggestions-panel{grid-column:1/-1}}
+@media(max-width:767px){.app main{padding:20px 16px 0}.app .workspace{grid-template-columns:minmax(0,1fr);gap:16px}.app .suggestions-panel{grid-column:auto}.app .workspace>.panel{padding:16px}.app .recognition-tools{flex-wrap:wrap}.app .recognition-panel .prison-cell{min-height:64px}.app .prison-ring{gap:4px;grid-template-rows:repeat(4,minmax(64px,auto))}.app .recognition-heading h2{white-space:normal}}

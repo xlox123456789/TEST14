@@ -3,12 +3,15 @@ import { SiteInfo } from './SiteInfo';
 import { BoardWorkspace } from './board/BoardWorkspace';
 import './board/board.css';
 import { Analytics } from './analytics/AnalyticsBootstrap';
+import { ThemeToggle } from './ThemeToggle';
+import { releases } from './releases';
+import './theme.css';
 
 export default function App() {
   const { videoRef, supported, status, capturing, error, snapshot, start, stop, capture } = useScreenCapture();
   const sharing = status === 'sharing';
   return <div className="app">
-    <header><a className="brand" href="#"><span className="brand-mark">T</span><span>塔羅斯<small>TORCHLIGHT: INFINITE · SS14</small></span></a><div className="header-tools"><SiteInfo onStartShare={start} shareDisabled={!supported || status === 'requesting'} sharing={sharing} /><span className="phase">PHASE 02 <i/> 盤面辨識與修正</span></div></header>
+    <header><a className="brand" href="#"><span className="brand-mark">T</span><span>塔羅斯<small>TORCHLIGHT: INFINITE · SS14</small></span></a><div className="header-tools"><SiteInfo onStartShare={start} shareDisabled={!supported || status === 'requesting'} sharing={sharing} /><span className="phase">PHASE 02 <i/> 盤面辨識與修正</span><ThemeToggle /></div></header>
     <main>
       <Analytics />
       <div className="workspace">
@@ -26,7 +29,7 @@ export default function App() {
         </section>
         <BoardWorkspace snapshot={snapshot} />
       </div>
-      <footer><span>Tartarus Planner <b>·</b> SS14</span><span>本機辨識 / 自願回報 / 手動截圖</span></footer>
+      <footer className="site-footer"><span><time dateTime={releases[0].date}>{releases[0].date.replaceAll('-', '/')}</time> 夏烏拉</span><div><a href="https://github.com/xlox123456789/TEST14" target="_blank" rel="noopener noreferrer">GITHUB頁面</a><a href="https://github.com/xlox123456789/TEST14/discussions/categories/%E6%84%8F%E8%A6%8B%E5%8F%8D%E9%A5%8B%E5%8D%80" target="_blank" rel="noopener noreferrer">意見反饋區</a></div></footer>
     </main>
   </div>;
 }

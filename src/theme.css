@@ -1,0 +1,56 @@
+/* Theme preferences stay on this browser; screenshots and board data are untouched. */
+.theme-toggle{margin-left:auto;display:inline-flex;flex:none;gap:3px;padding:3px;border:1px solid #445158;border-radius:8px;background:#191d20}
+.theme-toggle button{padding:7px 10px;background:transparent;color:#b7c4c9;font-size:12px;white-space:nowrap}
+.theme-toggle button[aria-pressed=true]{background:#bde77d;color:#17240f;font-weight:700}
+.app .header-tools{gap:16px;flex-wrap:wrap;justify-content:flex-end}
+.app .site-footer{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;font-size:12px;letter-spacing:0;line-height:1.8}
+.site-footer>div{display:flex;justify-content:center;flex-wrap:wrap;gap:20px}
+.site-footer a{color:#bde77d;text-underline-offset:4px}
+:root[data-theme=light]{color-scheme:light;color:#25343b;background:#f3f6f8}
+:root[data-theme=light] header,:root[data-theme=light] footer{border-color:#ced8dd}
+:root[data-theme=light] .panel,:root[data-theme=light] .info-modal{background:#fff;border-color:#cbd6dc;color:#25343b}
+:root[data-theme=light] .info-trigger,:root[data-theme=light] .theme-toggle,:root[data-theme=light] .kofi-link,:root[data-theme=light] .file-button{background:#f6f9fa;color:#34474e;border-color:#b9c8ce}
+:root[data-theme=light] .info-trigger:hover,:root[data-theme=light] .kofi-link:hover,:root[data-theme=light] .theme-toggle button:not([aria-pressed=true]):hover{background:#e4ecef}
+:root[data-theme=light] .theme-toggle button{color:#34474e}
+:root[data-theme=light] .theme-toggle button[aria-pressed=true]{color:#fff;background:#486c21}
+:root[data-theme=light] .secondary{background:#e5ecef;color:#263d46;border-color:#afc0c8}
+:root[data-theme=light] .secondary:hover:not(:disabled){background:#d4e1e6}
+:root[data-theme=light] .quiet{color:#485e69;border-color:#bdccd2}
+:root[data-theme=light] .preview{background:#edf2f5;border-color:#cbd6dc}
+:root[data-theme=light] .prison-cell{background:#edf2f5;color:#344b58;border-color:#b1c1ca}
+:root[data-theme=light] .prison-cell.office-cell{background:#e6efdf;border-color:#7d9d64}
+:root[data-theme=light] .prison-cell.selected{background:#e4efd8;outline-color:#5a7a2a}
+:root[data-theme=light] .prison-cell.recommended{border-color:#a67912;box-shadow:0 0 0 2px #a67912,0 0 12px #ad8e3d33}
+:root[data-theme=light] .rarity-normal{border-bottom-color:#8a98a1}
+:root[data-theme=light] .rarity-magic{border-bottom-color:#3771cd}
+:root[data-theme=light] .rarity-rare{border-bottom-color:#a88400}
+:root[data-theme=light] .rarity-legendary{border-bottom-color:#c86c16}
+:root[data-theme=light] .rarity-supreme{border-bottom-color:#9b49c8}
+:root[data-theme=light] .rarity-rainbow{border-bottom-color:#16896a}
+:root[data-theme=light] .courtyard{background:#f0f5ec;color:#4d674d}
+:root[data-theme=light] .cell-editor-popover{background:#fff;color:#25343b;border-color:#96ad90;box-shadow:0 12px 35px #1c344b30}
+:root[data-theme=light] .recognition-panel input,:root[data-theme=light] .recognition-panel select,:root[data-theme=light] .recognition-panel textarea,:root[data-theme=light] .suggestions-panel select{background:#f8fafb;color:#25343b;border-color:#adbec8}
+:root[data-theme=light] .tool-chip{background:#e8f1df;color:#35561c;border-color:#91ae78}
+:root[data-theme=light] .tool-options button{background:#f7faf5;color:#30482b}
+:root[data-theme=light] .tool-options button:hover:not(:disabled){background:#e5efdd}
+:root[data-theme=light] .best-advice{background:#edf5e4;color:#375e19;border-color:#9ab77c}
+:root[data-theme=light] .notice{background:#fff5dd;color:#70521c;border-color:#cfb26d}
+:root[data-theme=light] .notice.error{background:#fff0ed;color:#993c32;border-color:#cf968b}
+:root[data-theme=light] .modal-heading{background:#eef3f5;border-color:#cbd6dc}
+:root[data-theme=light] .modal-heading button{background:#dae5e9;color:#34474e}
+:root[data-theme=light] .info-content,:root[data-theme=light] .info-content h2,:root[data-theme=light] .info-content h3,:root[data-theme=light] .info-content strong{color:#34474e}
+:root[data-theme=light] .info-content .privacy-summary{background:#edf5e4;border-color:#739651}
+:root[data-theme=light] .info-content .privacy-summary h3,:root[data-theme=light] .info-content .privacy-summary p{color:#355d20}
+:root[data-theme=light] .brand small,:root[data-theme=light] .phase,:root[data-theme=light] .instructions p,:root[data-theme=light] .status,:root[data-theme=light] .empty h3,:root[data-theme=light] .empty p,:root[data-theme=light] .empty-tag,:root[data-theme=light] .capture-meta,:root[data-theme=light] .privacy,:root[data-theme=light] footer,:root[data-theme=light] .compact-hint,:root[data-theme=light] .cell-tier,:root[data-theme=light] .tool-picker-heading small,:root[data-theme=light] .tool-options span,:root[data-theme=light] .advice-alternatives span,:root[data-theme=light] .board-editor label,:root[data-theme=light] .decision-controls label,:root[data-theme=light] .tool-picker label,:root[data-theme=light] .animal-relations figcaption>span,:root[data-theme=light] .kofi-link span{color:#536975}
+:root[data-theme=light] .animal-relations h3,:root[data-theme=light] .animal-node>span{color:#34474e}
+:root[data-theme=light] .relation-arrows{stroke:#527a25}
+:root[data-theme=light] .animal-mammoth{color:#26748f}
+:root[data-theme=light] .animal-lion{color:#a66d21}
+:root[data-theme=light] .animal-wolf{color:#7260a5}
+:root[data-theme=light] .animal-rat{color:#af527a}
+:root[data-theme=light] .relation-arrows .special-relation{stroke:#a66d21}
+:root[data-theme=light] .eyebrow,:root[data-theme=light] .instructions>span,:root[data-theme=light] .status.active,:root[data-theme=light] .recognition-panel a,:root[data-theme=light] .info-content a,:root[data-theme=light] .site-footer a{color:#426c20!important}
+:root[data-theme=light] .soon{background:#e6ecef;color:#4d636f}
+:root[data-theme=light] .step{border-color:#b4c4cc;color:#536975}
+@media(max-width:1000px){.app .header-tools{justify-content:space-between}}
+@media(max-width:480px){.app .header-tools{gap:10px}.theme-toggle button{font-size:11px;padding:7px 9px}}

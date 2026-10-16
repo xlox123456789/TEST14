@@ -31,3 +31,7 @@
 ## 新增研究與既有研究
 
 本次重新閱讀優先來源、中文手冊與官方補充日誌；前次影片抽樣未重播全文。詳細演算法推論沿用研究文件並與遊戲證據分開。任何未知都可回到 [GAME_RULES](GAME_RULES.md) 的驗證清單，不以工具生成的JSON自證正確。
+
+## 2026-10-16 策略參考原始碼審閱
+
+補讀 blahdot3h/tartarus-simulator 的 engine.js、solver.js、analyze.js、tool-combos.js（結構／表頭）、tools/README.md 及 analyze／strategy 頁面原始內容。參考快照、逐項規則、17刑具、模型假設、未確認事項與無明確授權檔的檢查結果集中於 [STRATEGY_REFERENCE](STRATEGY_REFERENCE.md)。沒有複製原始碼、資產或生成策略資料；沒有新增影片實機驗證或時間戳。

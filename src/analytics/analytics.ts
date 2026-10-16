@@ -1,5 +1,5 @@
 import { currentVersion } from '../releases';
-export const EVENTS = ['capture_started', 'capture_completed', 'capture_failed', 'board_analysis_requested', 'board_recognition_completed', 'board_recognition_failed', 'manual_correction_saved', 'video_imported', 'video_frame_analyzed', 'error_report_submitted'] as const;
+export const EVENTS = ['capture_started', 'capture_completed', 'capture_failed', 'board_analysis_requested', 'board_recognition_completed', 'board_recognition_failed', 'manual_correction_saved', 'video_imported', 'video_frame_analyzed', 'error_report_submitted', 'strategy_requested'] as const;
 export type AnalyticsEvent = typeof EVENTS[number];
 type Params = { operation_result?: 'success' | 'failed'; analysis_mode?: 'screenshot' | 'video'; correction_count?: number; processing_time_ms?: number };
 type AnalyticsWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void; [key: `ga-disable-${string}`]: boolean };

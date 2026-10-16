@@ -18,19 +18,20 @@ describe('manual board editor and JSON workflow', () => {
     fireEvent.change(screen.getByLabelText('稀有度'), { target: { value: 'rainbow' } });
     expect(screen.getByRole('button', { name: '格子 8 囚犯' })).toHaveTextContent('鼠');
     fireEvent.click(screen.getByRole('button', { name: '確認整個盤面' })); expect(screen.getByText(/盤面已確認/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '格子 8 囚犯' }));
     fireEvent.change(screen.getByLabelText('狀態'), { target: { value: 'event' } });
     expect(screen.getByText(/盤面待確認/)).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('事件名稱'), { target: { value: '待核對事件' } });
   });
-  it('applies global values including zero remaining days and observed patrol options', () => {
-    render(<Editor />);
-    fireEvent.click(screen.getByText('全局欄位與其他資源'));
-    fireEvent.change(screen.getByLabelText('典獄長位置（1–16）'), { target: { value: '7' } });
-    fireEvent.change(screen.getByLabelText('剩餘天數'), { target: { value: '0' } });
-    fireEvent.change(screen.getByLabelText('可巡視位置（例如 2,3,5）'), { target: { value: '2,5' } });
-    fireEvent.click(screen.getByRole('button', { name: '套用全局欄位' }));
-    expect(screen.getByText(/典獄長：7/)).toBeInTheDocument();
+  it('sets the warden and patrol doors directly from the cell menu', () => {
+    render(<BoardWorkspace snapshot={null}/>);
+    fireEvent.click(screen.getByRole('button',{name:'格子 7 未知'}));
+    fireEvent.click(screen.getByRole('button',{name:'設為典獄長位置'}));
+    fireEvent.click(screen.getByLabelText('今日可選巡邏門'));
+    fireEvent.click(screen.getByRole('button',{name:'關閉格子編輯'}));
+    fireEvent.change(screen.getByLabelText('剩餘天數'),{target:{value:'0'}});
     expect(screen.getByLabelText('剩餘天數')).toHaveValue(0);
+    expect(screen.getByText(/典獄長：7/)).toBeInTheDocument();
   });
   it('keeps production editing while removing home-page development tools', () => {
     render(<BoardWorkspace snapshot={null} />);
@@ -38,17 +39,16 @@ describe('manual board editor and JSON workflow', () => {
     expect(screen.queryByText('影片回放測試模式（本機）')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '載入測試圖片' })).not.toBeInTheDocument();
     expect(screen.getByLabelText('載入本機圖片')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '修正盤面' }));
+    fireEvent.click(screen.getByRole('button', { name: '格子 2 未知' }));
     fireEvent.change(screen.getByLabelText('狀態'), { target: { value: 'locked' } });
     fireEvent.click(screen.getByRole('button', { name: '確認整個盤面' }));
-    expect(screen.getByRole('button', { name: '格子 1 封閉' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '格子 2 封閉' })).toBeInTheDocument();
     expect(screen.getByText(/盤面已確認/)).toBeInTheDocument();
   });
   it('recognizes an explicit snapshot and permits correcting its board', async () => {
     vi.mocked(analyzeImage).mockResolvedValue(recognizeRaster(makeTestRaster(), 'synthetic', null));
     render(<BoardWorkspace snapshot={{ url: 'blob:captured', width:980, height:740, capturedAt:new Date() }} />);
     await waitFor(() => expect(screen.getByRole('button', { name: '格子 3 囚犯' })).toHaveTextContent('狼阿奇'));
-    fireEvent.click(screen.getByRole('button', { name: '修正盤面' }));
     fireEvent.click(screen.getByRole('button', { name: '格子 3 囚犯' }));
     fireEvent.change(screen.getByLabelText('野獸種類'), {target:{value:'rat'}});
     expect(screen.getByRole('button', { name: '格子 3 囚犯' })).toHaveTextContent('低欸鼠');
@@ -64,4 +64,3 @@ describe('manual board editor and JSON workflow', () => {
     expect(screen.getByRole('button', { name: '格子 3 未知' })).toBeInTheDocument();
   });
 });
-

@@ -17,15 +17,15 @@ it('uses the requested display names without changing stable JSON species IDs', 
   expect(context().board.cells[1].species).toBe('rat');
   expect(releases[0].version).toBe(currentVersion);
 });
-it('requires explicit correction mode before showing editing controls', () => {
+it('opens a nearby editor directly when a cell is clicked', () => {
   render(<BoardWorkspace snapshot={null} />);
   expect(screen.queryByLabelText('狀態')).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: '修正盤面' }));
+  fireEvent.click(screen.getByRole('button', { name: '格子 2 未知' }));
   fireEvent.change(screen.getByLabelText('狀態'), { target: { value: 'prisoner' } });
   fireEvent.change(screen.getByLabelText('野獸種類'), { target: { value: 'lion' } });
-  fireEvent.click(screen.getByRole('button', { name: '完成修正' }));
+  fireEvent.click(screen.getByRole('button', { name: '關閉格子編輯' }));
   expect(screen.queryByLabelText('狀態')).not.toBeInTheDocument();
-  expect(screen.getByRole('button', { name: '格子 1 囚犯' })).toHaveTextContent('惡魔獅');
+  expect(screen.getByRole('button', { name: '格子 2 囚犯' })).toHaveTextContent('惡魔獅');
 });
 it('does not fetch until consent and confirmation, and cancel sends nothing', () => {
   const fetcher = vi.fn(); vi.stubGlobal('fetch', fetcher); const close = vi.fn();

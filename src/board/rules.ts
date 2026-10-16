@@ -1,9 +1,10 @@
 import type { Board, Species } from './model';
+import { FOOD_CHAINS } from './mechanics';
 export interface Candidate { kind: 'patrol' | 'devour'; target: number; actor?: number; status: 'observed' | 'experimental'; explanation: string }
 export interface PlanningResult { message: string; candidates: Candidate[]; blockedBy: string[]; optimal: false }
 // No production food-chain claim: these are two incompatible community-model hypotheses.
-const SINGLE: Record<Species, Species[]> = { mammoth: ['lion'], lion: ['wolf'], wolf: ['rat'], rat: ['mammoth'] };
-const TWO: Record<Species, Species[]> = { mammoth: ['lion', 'wolf'], lion: ['wolf', 'rat'], wolf: ['rat'], rat: ['mammoth'] };
+const SINGLE = FOOD_CHAINS.single;
+const TWO = FOOD_CHAINS.double;
 export type RuleMode = 'verified-only' | 'experimental-single' | 'experimental-two';
 export function possibleActions(board: Board, mode: RuleMode = 'verified-only'): PlanningResult {
   const result: PlanningResult = { message: '尚無可靠策略建議', candidates: [], blockedBy: [], optimal: false };

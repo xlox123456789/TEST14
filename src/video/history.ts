@@ -6,7 +6,7 @@ export interface Operation { id: string; before: LabeledFrame; after: LabeledFra
 export function boardDiff(before: Board, after: Board) {
   const fields = ['state', 'species', 'rarity', 'markers', 'event'] as const;
   return { cells: before.cells.flatMap(cell => { const next = after.cells.find(c => c.id === cell.id)!; const changes = fields.filter(key => JSON.stringify(cell[key]) !== JSON.stringify(next[key])).map(key => ({ field: key, before: cell[key], after: next[key] })); return changes.length ? [{ id: cell.id, changes }] : []; }),
-    globals: (['warden', 'currentDay', 'daysRemaining', 'patrolOptions', 'tools', 'resources', 'collected'] as const).filter(key => JSON.stringify(before[key]) !== JSON.stringify(after[key])).map(key => ({ field: key, before: before[key], after: after[key] })) };
+    globals: (['warden', 'currentDay', 'daysRemaining', 'patrolOptions', 'tools', 'resources', 'collected', 'phase', 'swapsRemaining', 'devoursRemaining', 'eventKind', 'offeredTools', 'chainActive'] as const).filter(key => JSON.stringify(before[key]) !== JSON.stringify(after[key])).map(key => ({ field: key, before: before[key], after: after[key] })) };
 }
 export function recognitionScore(actual: Board, expected: Board) {
   const errors: { cell: number; field: string; actual: unknown; expected: unknown }[] = []; let total = 0, correct = 0, covered = 0;

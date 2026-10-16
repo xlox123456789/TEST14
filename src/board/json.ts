@@ -1,4 +1,4 @@
-import { createBoard, RARITIES, SPECIES, STATES, type Board, type Evidence, type Prisoner } from './model';
+import { createBoard, RARITIES, SPECIES, STATES, PHASES, type Board, type Evidence, type Prisoner } from './model';
 function assert(condition: unknown, message: string): asserts condition { if (!condition) throw new Error(message); }
 function object(value: unknown): Record<string, unknown> { assert(value !== null && typeof value === 'object' && !Array.isArray(value), '應為 JSON 物件'); return value as Record<string, unknown>; }
 function integer(value: unknown, min: number, max: number): value is number { return typeof value === 'number' && Number.isInteger(value) && value >= min && value <= max; }
@@ -34,13 +34,22 @@ export function parseBoardJSON(input: string): Board {
     assert(cell.state === 'prisoner' || (p.species === null && p.rarity === null), '非囚犯格不可包含囚犯資料');
     assert(strings(cell.markers), '標記格式無效');
     assert(cell.event === null || (cell.state === 'event' && text(cell.event)), '事件格式無效');
+    assert(cell.revealedRarity == null || RARITIES.includes(cell.revealedRarity as typeof RARITIES[number]), '揭露品質無效');
+    if (cell.nestDays != null) nullableNumber(cell.nestDays, 0, 99);
     const e = object(cell.evidence);
     return { ...expected, ...p, state: cell.state as typeof STATES[number], markers: cell.markers, event: cell.event as string | null,
-      evidence: { state: checkEvidence(e.state), species: checkEvidence(e.species), rarity: checkEvidence(e.rarity), markers: checkEvidence(e.markers) } };
+      evidence: { state: checkEvidence(e.state), species: checkEvidence(e.species), rarity: checkEvidence(e.rarity), markers: checkEvidence(e.markers) },
+      ...(cell.revealedRarity !== undefined ? { revealedRarity: cell.revealedRarity as typeof RARITIES[number] | null } : {}),
+      ...(cell.nestDays !== undefined ? { nestDays: cell.nestDays as number | null } : {}) };
   });
   nullableNumber(data.warden, 1, 16); nullableNumber(data.currentDay, 1, 999); nullableNumber(data.daysRemaining, 0, 999);
   assert(data.patrolOptions === null || (Array.isArray(data.patrolOptions) && data.patrolOptions.length <= 16 && data.patrolOptions.every(id => integer(id, 1, 16)) && new Set(data.patrolOptions).size === data.patrolOptions.length), '巡視位置須為不重複的 1–16 或 null');
   assert(strings(data.tools), '刑具格式無效');
+  assert(data.phase === undefined || PHASES.includes(data.phase as typeof PHASES[number]), '決策階段無效');
+  for (const key of ['swapsRemaining', 'devoursRemaining'] as const) if (data[key] != null) nullableNumber(data[key], 0, 16);
+  assert(data.eventKind == null || text(data.eventKind), '事件種類無效');
+  assert(data.offeredTools === undefined || strings(data.offeredTools), '候選刑具格式無效');
+  assert(data.chainActive == null || typeof data.chainActive === 'boolean', '連鎖巡邏狀態無效');
   if (data.resources !== null) {
     const r = object(data.resources);
     assert(Object.keys(r).length <= 50 && Object.keys(r).every(k => k.length > 0 && k.length <= 60 && !['__proto__', 'constructor', 'prototype'].includes(k)), '資源名稱無效');
@@ -52,6 +61,8 @@ export function parseBoardJSON(input: string): Board {
   return { ...board, warden: data.warden as number | null, currentDay: data.currentDay as number | null, daysRemaining: data.daysRemaining as number | null,
     patrolOptions: data.patrolOptions as number[] | null, tools: data.tools, resources: data.resources as Board['resources'],
     collected: data.collected === null ? null : (data.collected as unknown[]).map(prisoner), evidence: checkEvidence(data.evidence),
-    fieldEvidence: Object.fromEntries(Object.entries(fields).map(([key, val]) => [key, checkEvidence(val)])), reviewedAt: null };
+    fieldEvidence: Object.fromEntries(Object.entries(fields).map(([key, val]) => [key, checkEvidence(val)])), reviewedAt: null,
+    ...(data.phase !== undefined ? { phase: data.phase as Board['phase'] } : {}),
+    ...Object.fromEntries(['swapsRemaining','devoursRemaining','eventKind','offeredTools','chainActive'].filter(key => data[key] !== undefined).map(key => [key,data[key]])) };
 }
 export function exportBoardJSON(board: Board): string { return JSON.stringify(board, null, 2); }

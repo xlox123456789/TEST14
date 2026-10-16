@@ -30,8 +30,8 @@ it('strips arbitrary sensitive parameters from automatic analytics', async () =>
 it.each(['http://localhost:5173/TEST14/','https://xlox123456789.github.io/TEST14/?no_analytics=1','https://example.com/TEST14/','https://xlox123456789.github.io/other/'])('excludes development, previews and explicit opt-out: %s', async url => {
   vi.stubGlobal('location',new URL(url)); const a = await import('../analytics/analytics'); a.initializeAnalytics(); a.track('video_imported'); expect(layer()).toHaveLength(0);
 });
-it('excludes automated tests, invalid IDs and unimplemented strategy events', async () => {
+it('excludes automated tests, invalid IDs and unrecognized event names', async () => {
   const a = await import('../analytics/analytics'); Object.defineProperty(navigator,'webdriver',{ configurable:true,value:true }); a.initializeAnalytics(); expect(layer()).toHaveLength(0);
   Object.defineProperty(navigator,'webdriver',{ configurable:true,value:false }); vi.stubEnv('VITE_GA_MEASUREMENT_ID','fake'); a.initializeAnalytics(); expect(layer()).toHaveLength(0);
-  vi.stubEnv('VITE_GA_MEASUREMENT_ID','G-TEST000001'); a.track('strategy_requested' as never); expect(layer()).toHaveLength(0);
+  vi.stubEnv('VITE_GA_MEASUREMENT_ID','G-TEST000001'); a.track('unrecognized_event' as never); expect(layer()).toHaveLength(0);
 });
